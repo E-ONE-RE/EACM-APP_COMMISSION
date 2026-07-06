@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DOMA" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD01V>
+    <DOMNAME>/EACM/ZDECV3_5</DOMNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DATATYPE>DEC</DATATYPE>
+    <LENG>000008</LENG>
+    <OUTPUTLEN>000010</OUTPUTLEN>
+    <DECIMALS>000005</DECIMALS>
+    <SIGNFLAG>X</SIGNFLAG>
+    <DDTEXT>decimal field with 3 integer positions, 5 decimal, sign +/-</DDTEXT>
+   </DD01V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Campo decimale con 3 posizioni intere, 5 decimali, segno +/-</DDTEXT>
+    </item>
+   </DD01_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZIMAR</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/ZCURR15</DOMNAME>
+    <HEADLEN>27</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>20</SCRLEN2>
+    <SCRLEN3>27</SCRLEN3>
+    <DDTEXT>Taxable recuperated amount</DDTEXT>
+    <REPTEXT>Taxable recuperated am.</REPTEXT>
+    <SCRTEXT_S>Tax.re.am.</SCRTEXT_S>
+    <SCRTEXT_M>Taxable rec.am.</SCRTEXT_M>
+    <SCRTEXT_L>Taxable recuperated am.</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Importo anticipo recuperato</DDTEXT>
+     <REPTEXT>Importo anticipo recuperato</REPTEXT>
+     <SCRTEXT_S>Imp.recup.</SCRTEXT_S>
+     <SCRTEXT_M>Importo anticipo rec</SCRTEXT_M>
+     <SCRTEXT_L>Importo anticipo recuperato</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

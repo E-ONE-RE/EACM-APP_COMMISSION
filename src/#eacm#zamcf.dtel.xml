@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZAMCF</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/NUMC6</DOMNAME>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>28</SCRLEN3>
+    <DDTEXT>YYYYMM competence facsimile</DDTEXT>
+    <SCRTEXT_S>YYYYMM</SCRTEXT_S>
+    <SCRTEXT_M>YYYYMM competence</SCRTEXT_M>
+    <SCRTEXT_L>YYYYMM competence facsimile</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+    <LANGU>S</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>AAAAMM Competenza fac-simile</DDTEXT>
+     <SCRTEXT_S>Comp fac.</SCRTEXT_S>
+     <SCRTEXT_M>Competen.fac-simile</SCRTEXT_M>
+     <SCRTEXT_L>AAAAMM Competenza fac-simile</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>S</DDLANGUAGE>
+     <DDTEXT>AAAAMM Compet. Borrador</DDTEXT>
+     <SCRTEXT_S>Comp. fac</SCRTEXT_S>
+     <SCRTEXT_M>Competen.fac-simile</SCRTEXT_M>
+     <SCRTEXT_L>AAAAMM Compet. Borrador</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

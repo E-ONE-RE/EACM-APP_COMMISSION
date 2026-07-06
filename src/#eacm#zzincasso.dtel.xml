@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZZINCASSO</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/ZCURRS15</DOMNAME>
+    <HEADLEN>20</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Amount takings (about row)</DDTEXT>
+    <REPTEXT>Actual takings</REPTEXT>
+    <SCRTEXT_S>Takings</SCRTEXT_S>
+    <SCRTEXT_M>Actual takings</SCRTEXT_M>
+    <SCRTEXT_L>Actual takings</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Importo incassato (incasso di riga)</DDTEXT>
+     <REPTEXT>Incasso attuale</REPTEXT>
+     <SCRTEXT_S>Incasso</SCRTEXT_S>
+     <SCRTEXT_M>Incasso attuale</SCRTEXT_M>
+     <SCRTEXT_L>Incasso attuale</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

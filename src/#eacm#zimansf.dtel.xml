@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZIMANSF</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/ZCURRS15</DOMNAME>
+    <HEADLEN>37</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>20</SCRLEN2>
+    <SCRLEN3>37</SCRLEN3>
+    <DDTEXT>Amount advance of print facsimile</DDTEXT>
+    <REPTEXT>Amount advance of print facsimile</REPTEXT>
+    <SCRTEXT_S>Adv.PrtFac</SCRTEXT_S>
+    <SCRTEXT_M>Am.advance print fac</SCRTEXT_M>
+    <SCRTEXT_L>Amount advance of print facsimile</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Importo anticipo di stampa fac-simile</DDTEXT>
+     <REPTEXT>Importo anticipo di stampa fac-simile</REPTEXT>
+     <SCRTEXT_S>Imp.Ant.St</SCRTEXT_S>
+     <SCRTEXT_M>Imp. anticipo stampa</SCRTEXT_M>
+     <SCRTEXT_L>Importo anticipo di stampa fac-simile</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

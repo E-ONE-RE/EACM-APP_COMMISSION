@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZCLPR</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/ZCLPR</DOMNAME>
+    <HEADLEN>29</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>18</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Code classification commissions</DDTEXT>
+    <REPTEXT>Cod.class.comm.</REPTEXT>
+    <SCRTEXT_S>Cod.comm.</SCRTEXT_S>
+    <SCRTEXT_M>Cod.class.comm.</SCRTEXT_M>
+    <SCRTEXT_L>Cod.class.comm.</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Codice classificazione provvigioni (da SD)</DDTEXT>
+     <REPTEXT>Codice classificazione provv.</REPTEXT>
+     <SCRTEXT_S>Cod.provv.</SCRTEXT_S>
+     <SCRTEXT_M>Cod. class. provv.</SCRTEXT_M>
+     <SCRTEXT_L>Codice class. provv.</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

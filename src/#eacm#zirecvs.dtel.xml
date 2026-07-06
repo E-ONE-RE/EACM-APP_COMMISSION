@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZIRECVS</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/ZCURR15</DOMNAME>
+    <HEADLEN>36</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>20</SCRLEN2>
+    <SCRLEN3>36</SCRLEN3>
+    <DDTEXT>Recovered amount in company currency</DDTEXT>
+    <REPTEXT>Recovered amount in company currency</REPTEXT>
+    <SCRTEXT_S>Recov. DI</SCRTEXT_S>
+    <SCRTEXT_M>Recovered amount DI</SCRTEXT_M>
+    <SCRTEXT_L>Recovered amount in company currency</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Importo recuperato in valuta società</DDTEXT>
+     <REPTEXT>Importo recuperato in valuta società</REPTEXT>
+     <SCRTEXT_S>Imp.rec.vs</SCRTEXT_S>
+     <SCRTEXT_M>Importo recup. v.soc</SCRTEXT_M>
+     <SCRTEXT_L>Importo recuperato in valuta società</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

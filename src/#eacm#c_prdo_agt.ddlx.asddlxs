@@ -1,0 +1,71 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Agente',
+  typeNamePlural: 'Agenti',
+  title: { type: #STANDARD, value: 'Zcdaz' },
+  description: { value: 'Zidag' }
+}
+annotate view /EACM/C_PRDO_AGT with
+{
+  @UI.facet: [
+    { id: 'ItemSummary', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetElement: '_Position', targetQualifier: 'ItemSummary', label: 'Riepilogo item', position: 10 },
+    { id: 'AgentData', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'AgentData', label: 'Agente / cliente / destinazione', position: 20 },
+    { id: 'AgentAmounts', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Amounts', label: 'Importi', position: 30 }
+  ]
+
+  @EndUserText.label: 'Codice agente'
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.fieldGroup: [{ qualifier: 'AgentData', position: 10 }]
+  @UI.identification: [{ position: 10 }]
+  Zcdaz;
+  
+  
+@EndUserText.label: 'Importo anticipato'
+@UI.lineItem:       [{ position: 20, importance: #HIGH, hidden: #(HideAnticipo) }]
+@UI.fieldGroup:     [{ qualifier: 'Amounts', position: 20, hidden: #(HideAnticipo) }]
+@UI.identification: [{ position: 20, hidden: #(HideAnticipo) }]
+Ziman;
+
+@EndUserText.label: 'Importo recupero'
+@UI.lineItem:       [{ position: 30, importance: #HIGH, hidden: #(HideAnticipo) }]
+@UI.fieldGroup:     [{ qualifier: 'Amounts', position: 30, hidden: #(HideAnticipo) }]
+@UI.identification: [{ position: 30, hidden: #(HideAnticipo) }]
+Zimar;
+
+@EndUserText.label: '% Prov'
+@UI.lineItem:       [{ position: 40, importance: #HIGH, hidden: #(HideAltriCampi) }]
+@UI.fieldGroup:     [{ qualifier: 'Amounts', position: 40, hidden: #(HideAltriCampi) }]
+@UI.identification: [{ position: 40, hidden: #(HideAltriCampi) }]
+Zpcpr;
+
+@EndUserText.label: 'Base di Calcolo'
+@UI.lineItem:       [{ position: 50, importance: #HIGH, hidden: #(HideAltriCampi) }]
+@UI.fieldGroup:     [{ qualifier: 'Amounts', position: 50, hidden: #(HideAltriCampi) }]
+@UI.identification: [{ position: 50, hidden: #(HideAltriCampi) }]
+Zimpp;
+
+@EndUserText.label: 'Importo Provvigione'
+@UI.lineItem:       [{ position: 60, importance: #HIGH, hidden: #(HideAltriCampi) }]
+@UI.fieldGroup:     [{ qualifier: 'Amounts', position: 60, hidden: #(HideAltriCampi) }]
+@UI.identification: [{ position: 60, hidden: #(HideAltriCampi) }]
+Zimco;
+
+@EndUserText.label: 'Provvigione a valore'
+@UI.lineItem:       [{ position: 70, importance: #HIGH, hidden: #(HideAltriCampi) }]
+@UI.fieldGroup:     [{ qualifier: 'Amounts', position: 70, hidden: #(HideAltriCampi) }]
+@UI.identification: [{ position: 70, hidden: #(HideAltriCampi) }]
+Zimpu;
+
+  @EndUserText.label: 'Es.Pagamento'
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'AgentData', position: 20 }]
+  @UI.identification: [{ position: 50 }]
+  Kunrg;
+
+  @EndUserText.label: 'Dest.merce'
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'AgentData', position: 30 }]
+  @UI.identification: [{ position: 60 }]
+  Zdest;
+
+}

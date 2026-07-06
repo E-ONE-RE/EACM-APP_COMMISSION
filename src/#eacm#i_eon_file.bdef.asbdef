@@ -1,0 +1,26 @@
+managed implementation in class /eacm/bp_i_eon_file unique;
+strict ( 2 );
+
+define behavior for /EACM/I_EON_FILE //alias <alias_name>
+persistent table /eacm/eon_file
+lock master
+authorization master ( instance )
+//etag master <field_name>
+{
+  create ( authorization : global );
+  update;
+  delete;
+  mapping for /eacm/eon_file
+{
+  FileUuid    = file_uuid;
+  CreatedBy   = created_by;
+  CreatedAt   = created_at;
+  FileName    = file_name;
+  MimeType    = mime_type;
+  FileSize    = file_size;
+  FileContent = file_content;
+}
+field ( numbering : managed, readonly ) FileUuid;
+
+
+}

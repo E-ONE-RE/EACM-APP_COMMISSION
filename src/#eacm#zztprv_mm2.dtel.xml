@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZZTPRV_MM2</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/NUM2</DOMNAME>
+    <HEADLEN>22</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>22</SCRLEN3>
+    <DDTEXT>Months for calculating commission secondary</DDTEXT>
+    <REPTEXT>Months comm. secondary</REPTEXT>
+    <SCRTEXT_S>Months sec</SCRTEXT_S>
+    <SCRTEXT_M>Months comm. second</SCRTEXT_M>
+    <SCRTEXT_L>Months comm. secondary</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Mesi per calcolo provvigione secondaria</DDTEXT>
+     <REPTEXT>Mesi provv. secondaria</REPTEXT>
+     <SCRTEXT_S>Mesi p.s.</SCRTEXT_S>
+     <SCRTEXT_M>Mesi prv secondaria</SCRTEXT_M>
+     <SCRTEXT_L>Mesi provv. secondaria</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

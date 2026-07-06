@@ -1,0 +1,64 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Posizione',
+  typeNamePlural: 'Posizioni',
+  title: { type: #STANDARD, value: 'Posnr' },
+  description: { value: 'MaterialDescription' }
+}
+annotate view /EACM/C_PRDO_POS with
+{
+  @UI.facet: [
+    { id: 'Position', purpose: #STANDARD, type: #COLLECTION, label: 'Dettaglio posizione', position: 10 },
+    { id: 'PositionKeys', parentId: 'Position', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Keys', label: 'Identificativi', position: 10 },
+    { id: 'PositionMaterial', parentId: 'Position', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Material', label: 'Materiale e valori', position: 20 },
+    { id: 'Agents', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Agenti', position: 20, targetElement: '_Agents' }
+  ]
+
+  @EndUserText.label: 'Cod.class.comm.'
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.fieldGroup: [
+    { qualifier: 'Keys', position: 10 },
+    { qualifier: 'ItemSummary', position: 10 }
+  ]
+  Zclpr;
+
+  @EndUserText.label: 'Item (SD)'
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.fieldGroup: [
+    { qualifier: 'Keys', position: 20 },
+    { qualifier: 'ItemSummary', position: 20 }
+  ]
+  Posnr;
+
+  @EndUserText.label: 'Materiale'
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.fieldGroup: [
+    { qualifier: 'Material', position: 10 },
+    { qualifier: 'ItemSummary', position: 30 }
+  ]
+  Material;
+
+  @EndUserText.label: 'Descrizione materiale'
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.fieldGroup: [
+    { qualifier: 'Material', position: 20 },
+    { qualifier: 'ItemSummary', position: 40 }
+  ]
+  MaterialDescription;
+
+  @EndUserText.label: 'Valuta documento'
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.fieldGroup: [
+    { qualifier: 'Material', position: 30 },
+    { qualifier: 'ItemSummary', position: 50 }
+  ]
+  Waerk;
+
+  @EndUserText.label: 'Quantita'
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.fieldGroup: [
+    { qualifier: 'Material', position: 40 },
+    { qualifier: 'ItemSummary', position: 60 }
+  ]
+  Quantity;
+}

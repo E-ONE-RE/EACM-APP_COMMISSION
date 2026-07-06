@@ -1,0 +1,10 @@
+CLASS /eacm/bp_i_nprdo_doc
+DEFINITION
+PUBLIC
+ABSTRACT
+
+FINAL FOR BEHAVIOR OF /eacm/i_prdo_doc.
+ENDCLASS.
+
+CLASS /eacm/bp_i_nprdo_doc IMPLEMENTATION.
+ENDCLASS.

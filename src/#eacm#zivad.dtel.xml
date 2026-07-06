@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZIVAD</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/ZCURR15</DOMNAME>
+    <HEADLEN>21</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>18</SCRLEN2>
+    <SCRLEN3>21</SCRLEN3>
+    <DDTEXT>Total VAT in currency document</DDTEXT>
+    <REPTEXT>Tot. VAT in curr. doc</REPTEXT>
+    <SCRTEXT_S>VAT DD</SCRTEXT_S>
+    <SCRTEXT_M>Tot. VAT in curr.</SCRTEXT_M>
+    <SCRTEXT_L>Tot. VAT in curr. doc</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>IVA tot in divisa doc</DDTEXT>
+     <REPTEXT>IVA tot in divisa doc</REPTEXT>
+     <SCRTEXT_S>IVA DD</SCRTEXT_S>
+     <SCRTEXT_M>IVA tot in div doc</SCRTEXT_M>
+     <SCRTEXT_L>IVA tot in divisa doc</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

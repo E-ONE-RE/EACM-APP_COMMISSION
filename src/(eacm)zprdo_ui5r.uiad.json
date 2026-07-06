@@ -1,0 +1,34 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "{{appDescription}}",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD",
+    "targetMappingTitle": "Gestione provvigioni manuali"
+  },
+  "ui5AppDetails": {
+    "appId": "zprdo"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_721DBA6B942510FC7B99F3BCCF7F30ADC68F8408_TM",
+    "semanticObject": "/EACM/PR1",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_721DBA6B942510FC7B99F3BCCF7F30ADC68F8408_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Gestione provvigioni manuali"
+      }
+    }
+  ]
+}

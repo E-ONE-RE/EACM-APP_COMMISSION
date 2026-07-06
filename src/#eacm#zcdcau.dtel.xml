@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZCDCAU</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/ZCSPV</DOMNAME>
+    <HEADLEN>31</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>31</SCRLEN3>
+    <DDTEXT>Reason of the commission  movement</DDTEXT>
+    <REPTEXT>Reason commission movement</REPTEXT>
+    <SCRTEXT_S>Reason</SCRTEXT_S>
+    <SCRTEXT_M>Reason commission</SCRTEXT_M>
+    <SCRTEXT_L>Reason commission movement</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Causale movimento provvigionale</DDTEXT>
+     <REPTEXT>Causale movimento provvigionale</REPTEXT>
+     <SCRTEXT_S>Mov.prov.</SCRTEXT_S>
+     <SCRTEXT_M>Causale mov. provv.</SCRTEXT_M>
+     <SCRTEXT_L>Causale movimento provvigionale</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

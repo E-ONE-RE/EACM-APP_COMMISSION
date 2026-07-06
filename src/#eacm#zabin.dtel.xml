@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZABIN</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>BAPIFLAG</DOMNAME>
+    <HEADLEN>27</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>27</SCRLEN3>
+    <DDTEXT>Deduction/Increase commissions</DDTEXT>
+    <REPTEXT>Deduction/Increase commiss.</REPTEXT>
+    <SCRTEXT_S>Deduc/Incr</SCRTEXT_S>
+    <SCRTEXT_M>Deduc/Incr. commis.</SCRTEXT_M>
+    <SCRTEXT_L>Deduction/Increase commiss.</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Abbattimento/Incremento provvigioni</DDTEXT>
+     <REPTEXT>Abbatt./Increm. provvigioni</REPTEXT>
+     <SCRTEXT_S>Abb./Incr.</SCRTEXT_S>
+     <SCRTEXT_M>Abbatt./Increm. prv</SCRTEXT_M>
+     <SCRTEXT_L>Abbatt./Increm. provvigioni</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

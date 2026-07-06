@@ -1,0 +1,24 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "/EACM/COM_PR_UI5R",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_ALV5_DEFAULT"
+  },
+  "ui5AppDetails": {
+    "appId": "/EACM/COM2_UI5R"
+  },
+  "navigation": {
+    "targetMappingId": "/EACM/COM_PR_UI5R_TM",
+    "semanticObject": "ZEACM_COMMISSION",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": []
+}

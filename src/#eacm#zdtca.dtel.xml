@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/EACM/ZDTCA</ROLLNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DOMNAME>/EACM/NUMC6</DOMNAME>
+    <HEADLEN>19</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Advance competence</DDTEXT>
+    <REPTEXT>Adv.comp.</REPTEXT>
+    <SCRTEXT_S>Ad.comp.</SCRTEXT_S>
+    <SCRTEXT_M>Adv.comp.</SCRTEXT_M>
+    <SCRTEXT_L>Adv.comp.</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+    <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Competenza anticipo</DDTEXT>
+     <REPTEXT>Competenza anticipo</REPTEXT>
+     <SCRTEXT_S>Comp.ant.</SCRTEXT_S>
+     <SCRTEXT_M>Competenza anticipo</SCRTEXT_M>
+     <SCRTEXT_L>Competenza anticipo</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

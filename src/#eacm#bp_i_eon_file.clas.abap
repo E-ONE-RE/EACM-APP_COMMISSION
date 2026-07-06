@@ -1,0 +1,5 @@
+CLASS /eacm/bp_i_eon_file DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF /eacm/i_eon_file.
+ENDCLASS.
+
+CLASS /eacm/bp_i_eon_file IMPLEMENTATION.
+ENDCLASS.

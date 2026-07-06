@@ -1,0 +1,61 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Documento',
+  typeNamePlural: 'Documenti',
+  title: { type: #STANDARD, value: 'Vbeln' },
+  description: { value: 'Zclpr' }
+}
+
+annotate view /EACM/C_PRDO_DOC with
+{
+  @UI.facet: [
+    { id: 'Document', purpose: #STANDARD, type: #COLLECTION, label: 'Dati documento', position: 10 },
+    { id: 'DocumentKeys', parentId: 'Document', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Keys', label: 'Identificativi', position: 10 },
+    { id: 'DocumentCommercial', parentId: 'Document', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Commercial', label: 'Dati commerciali', position: 20 },
+    { id: 'Positions', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Posizioni', position: 20, targetElement: '_Positions' }
+  ]
+
+  @EndUserText.label: 'Cod.class.comm.'
+  @UI.fieldGroup: [{ qualifier: 'Keys', position: 10 }]
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.selectionField: [{ position: 10 }]
+  Zclpr;
+
+  @EndUserText.label: 'Societa'
+  @UI.fieldGroup: [{ qualifier: 'Keys', position: 20 }]
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.selectionField: [{ position: 20 }]
+  Bukrs;
+
+  @EndUserText.label: 'Organizzazione vendite'
+  @UI.fieldGroup: [{ qualifier: 'Keys', position: 30 }]
+  @UI.lineItem: [{ position: 30, importance: #MEDIUM }]
+  @UI.selectionField: [{ position: 30 }]
+  Vkorg;
+
+  @EndUserText.label: 'Canale distribuzione'
+  @UI.fieldGroup: [{ qualifier: 'Keys', position: 40 }]
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.selectionField: [{ position: 40 }]
+  Vtweg;
+
+  @EndUserText.label: 'Documento'
+  @UI.fieldGroup: [{ qualifier: 'Commercial', position: 10 }]
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.selectionField: [{ position: 50 }]
+  Vbeln;
+
+  @EndUserText.label: 'Esercizio'
+  @UI.fieldGroup: [{ qualifier: 'Commercial', position: 20 }]
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.selectionField: [{ position: 60 }]
+  Gjahr;
+
+  @EndUserText.label: 'Esecutore pagamento'
+  @UI.fieldGroup: [{ qualifier: 'Commercial', position: 30 }]
+  kunrg;
+
+  @EndUserText.label: 'Data documento'
+  @UI.fieldGroup: [{ qualifier: 'Commercial', position: 40 }]
+  fkdat;
+}

@@ -1,0 +1,34 @@
+{
+  "formatVersion": "2",
+  "header": {
+    "description": "{{appDescription}}",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "appType": "ui5",
+    "catalogId": "SAP_TC_UI5_REPO_UIAD",
+    "targetMappingTitle": "Gestione provvigioni manuale"
+  },
+  "ui5AppDetails": {
+    "appId": "eacm.commiss"
+  },
+  "navigation": {
+    "targetMappingId": "UI5R_75BB50EC6D6F07BC77ED5D183D5E1061A0C49F1C_TM",
+    "semanticObject": "ZEACM_COMMISSION",
+    "action": "manage",
+    "desktop": true,
+    "tablet": true,
+    "phone": true
+  },
+  "tiles": [
+    {
+      "id": "UI5R_75BB50EC6D6F07BC77ED5D183D5E1061A0C49F1C_AL",
+      "tileType": "static",
+      "isDefault": true,
+      "standard": {
+        "title": "Gestione provvigioni manuale"
+      }
+    }
+  ]
+}

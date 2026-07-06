@@ -1,0 +1,6 @@
+@EndUserText.label: 'Gestione provvigioni manuali'
+define service /EACM/APP_PRDO {
+  expose /EACM/C_PRDO_DOC as Documents;
+  expose /EACM/C_PRDO_POS as Positions;
+  expose /EACM/C_PRDO_AGT as Agents;
+}

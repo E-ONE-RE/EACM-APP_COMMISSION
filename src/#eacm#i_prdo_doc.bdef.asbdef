@@ -1,0 +1,210 @@
+// unmanaged implementation in class /EACM/BP_I_NPRDO_DOC unique;
+//    strict ( 2 );
+//    with draft;
+//
+//    define behavior for /EACM/I_PRDO_DOC alias Document
+//    late numbering
+//    draft table /EACM/PRDO_DOC_D
+//    lock master total etag LocalLastChangedAt
+//    authorization master ( instance )
+//    etag master LocalLastChangedAt
+//    {
+//      create ( precheck );
+//      update;
+//      delete;
+//
+//      draft action Edit;
+//      draft action Activate optimized;
+//      draft action Discard;
+//      draft action Resume;
+//      draft determine action Prepare;
+//
+//      field ( mandatory : create ) Zclpr, Bukrs, Vkorg, Vtweg;
+//      field ( readonly ) Kunrg;
+//
+//// questo side effects
+//// serve per visualizzare dei campi diversi, in AGENTS, in base
+//// al valore di ZCPLR ( che è solo di testata)
+// side effects
+//{
+//  field Zclpr affects field _Positions._Agents.HideAnticipo,
+//                      field _Positions._Agents.HideAltriCampi;
+//}
+//      association _Positions { create; with draft; }
+//    }
+//
+//    define behavior for /EACM/I_PRDO_POS alias Position
+//    late numbering
+//    draft table /EACM/PRDO_POS_D
+//    lock dependent by _Document
+//    authorization dependent by _Document
+//    {
+//
+//      update;
+//      delete;
+//
+//      determination SetPositionDefaults on modify { create; }
+//
+//      field ( readonly )
+//        Zclpr,
+//        Bukrs,
+//        Vkorg,
+//        Vtweg,
+//        Vbeln,
+//        Gjahr,
+//        Posnr,
+//        Material,
+//        MaterialDescription,
+//        Quantity;
+//
+//      association _Document { with draft; }
+//      association _Agents { create; with draft; }
+//
+//  side effects {
+//    field Posnr affects field Material, field MaterialDescription, field Waerk, field Quantity;
+//  }
+//}
+//
+//    define behavior for /EACM/I_PRDO_AGT alias Agent
+//    late numbering
+//    draft table /EACM/PRDO_AGT_D
+//    lock dependent by _Document
+//    authorization dependent by _Document
+//    {
+//      update;
+//      delete;
+//
+//
+// determination CalculateZimco on modify { field ZPCPR; field ZIMPP; }
+//
+//  side effects {
+//    field ZPCPR affects field ZIMCO;
+//    field ZIMPP affects field ZIMCO;
+//  }
+//
+//      field ( readonly )
+//        Zclpr,
+//        Bukrs,
+//        Vkorg,
+//        Vtweg,
+//        Vbeln,
+//        Gjahr,
+//        Posnr,
+//        Zidag,
+//        Zimar,
+//        ZIMPU,
+//        UnitMeasure,
+//        HideAnticipo,
+//        HideAltriCampi;
+//
+//      association _Document { with draft; }
+//      association _Position { with draft; }
+//    }
+
+unmanaged implementation in class /EACM/BP_I_NPRDO_DOC unique;
+    strict ( 2 );
+    with draft;
+
+    define behavior for /EACM/I_PRDO_DOC alias Document
+    late numbering
+    draft table /EACM/PRDO_DOC_D
+    lock master total etag LocalLastChangedAt
+    authorization master ( instance )
+    etag master LocalLastChangedAt
+    {
+      create ( precheck );
+      update;
+      delete;
+
+      draft action Edit;
+      draft action Activate optimized;
+      draft action Discard;
+      draft action Resume;
+      draft determine action Prepare;
+
+      field ( mandatory : create ) Zclpr, Bukrs, Vkorg, Vtweg;
+      field ( readonly ) Kunrg;
+
+// questo side effects
+// serve per visualizzare dei campi diversi, in AGENTS, in base
+// al valore di ZCPLR ( che è solo di testata)
+ side effects
+{
+  field Zclpr affects field _Positions._Agents.HideAnticipo,
+                      field _Positions._Agents.HideAltriCampi;
+}
+      association _Positions { create; with draft; }
+    }
+
+    define behavior for /EACM/I_PRDO_POS alias Position
+    late numbering
+    draft table /EACM/PRDO_POS_D
+    lock dependent by _Document
+    authorization dependent by _Document
+    {
+
+      update;
+      delete;
+
+      determination SetPositionDefaults on modify { create; }
+
+      field ( readonly )
+        Zclpr,
+        Bukrs,
+        Vkorg,
+        Vtweg,
+        Vbeln,
+        Gjahr,
+        Posnr,
+        Material,
+        MaterialDescription,
+        Quantity;
+
+      association _Document { with draft; }
+      association _Agents { create; with draft; }
+
+  side effects {
+    field Posnr affects field Material, field MaterialDescription, field Waerk, field Quantity;
+  }
+}
+
+    define behavior for /EACM/I_PRDO_AGT alias Agent
+    late numbering
+    draft table /EACM/PRDO_AGT_D
+    lock dependent by _Document
+    authorization dependent by _Document
+    {
+      update;
+      delete;
+
+
+ determination CalculateZimco on modify { field ZPCPR; field ZIMPP; }
+
+  side effects {
+    field ZPCPR affects field ZIMCO;
+    field ZIMPP affects field ZIMCO;
+  }
+
+      field ( readonly )
+        Zclpr,
+        Bukrs,
+        Vkorg,
+        Vtweg,
+        Vbeln,
+        Gjahr,
+        Posnr,
+        Zidag,
+        Zimar,
+        ZIMPU,
+        UnitMeasure,
+        HideAnticipo,
+        HideAltriCampi,
+        Zstre,
+        Zmodi,
+        Zcamd,
+        Zdtmd,
+        Zormd;
+
+      association _Document { with draft; }
+      association _Position { with draft; }
+    }

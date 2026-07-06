@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DOMA" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD01V>
+    <DOMNAME>/EACM/ZCURRS15</DOMNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DATATYPE>CURR</DATATYPE>
+    <LENG>000015</LENG>
+    <OUTPUTLEN>000021</OUTPUTLEN>
+    <DECIMALS>000002</DECIMALS>
+    <SIGNFLAG>X</SIGNFLAG>
+    <DDTEXT>Domain currency di 15 (with sign)</DDTEXT>
+   </DD01V>
+   <I18N_LANGS>
+    <LANGU>I</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>I</DDLANGUAGE>
+     <DDTEXT>Dominio currency di 15 (Col segno)</DDTEXT>
+    </item>
+   </DD01_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
