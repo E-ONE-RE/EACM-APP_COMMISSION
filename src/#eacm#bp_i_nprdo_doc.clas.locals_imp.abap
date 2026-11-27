@@ -820,6 +820,30 @@
 *
 *  LOOP AT entities INTO DATA(position).
 *
+*    SELECT SINGLE zstre    "#EC CI_NOORDER
+*      FROM /eacm/prdo
+*      WHERE zclpr = @position-Zclpr
+*        AND bukrs = @position-Bukrs
+*        AND vkorg = @position-Vkorg
+*        AND vtweg = @position-Vtweg
+*        AND vbeln = @position-Vbeln
+*        AND gjahr = @position-Gjahr
+*        AND posnr = @position-Posnr
+*        AND zstre <> 'D'
+*        AND zmodi <> 'D'
+*      INTO @DATA(position_zstre).
+*
+*    IF sy-subrc = 0 AND position_zstre = 'C'.
+*      APPEND VALUE #( %tky = position-%tky ) TO failed-position.
+*      APPEND VALUE #(
+*        %tky = position-%tky
+*        %msg = new_message_with_text(
+*          severity = if_abap_behv_message=>severity-error
+*          text     = 'Stato C: consentito solo inserimento righe' )
+*      ) TO reported-position.
+*      CONTINUE.
+*    ENDIF.
+*
 *    APPEND VALUE /eacm/prdo(
 *      zclpr = position-Zclpr
 *      bukrs = position-Bukrs
@@ -840,6 +864,31 @@
 *
 *  METHOD delete.
 *    LOOP AT keys INTO DATA(position_key).
+*
+*      SELECT SINGLE zstre     "#EC CI_NOORDER
+*        FROM /eacm/prdo
+*        WHERE zclpr = @position_key-Zclpr
+*          AND bukrs = @position_key-Bukrs
+*          AND vkorg = @position_key-Vkorg
+*          AND vtweg = @position_key-Vtweg
+*          AND vbeln = @position_key-Vbeln
+*          AND gjahr = @position_key-Gjahr
+*          AND posnr = @position_key-Posnr
+*          AND zstre <> 'D'
+*          AND zmodi <> 'D'
+*        INTO @DATA(position_delete_zstre).
+*
+*      IF sy-subrc = 0 AND position_delete_zstre = 'C'.
+*        APPEND VALUE #( %tky = position_key-%tky ) TO failed-position.
+*        APPEND VALUE #(
+*          %tky = position_key-%tky
+*          %msg = new_message_with_text(
+*            severity = if_abap_behv_message=>severity-error
+*            text     = 'Stato C: consentito solo inserimento righe' )
+*        ) TO reported-position.
+*        CONTINUE.
+*      ENDIF.
+*
 *      APPEND VALUE /eacm/prdo(
 *        zclpr = position_key-Zclpr
 *        bukrs = position_key-Bukrs
@@ -1671,6 +1720,32 @@
 *
 *LOOP AT entities INTO DATA(agent).
 *
+*    SELECT SINGLE zstre
+*      FROM /eacm/prdo
+*      WHERE zclpr = @agent-Zclpr
+*        AND bukrs = @agent-Bukrs
+*        AND vkorg = @agent-Vkorg
+*        AND vtweg = @agent-Vtweg
+*        AND vbeln = @agent-Vbeln
+*        AND gjahr = @agent-Gjahr
+*        AND posnr = @agent-Posnr
+*        AND zidag = @agent-Zidag
+*        AND zcdaz = @agent-Zcdaz
+*        AND zstre <> 'D'
+*        AND zmodi <> 'D'
+*      INTO @DATA(agent_zstre).
+*
+*    IF sy-subrc = 0 AND agent_zstre = 'C'.
+*      APPEND VALUE #( %tky = agent-%tky ) TO failed-agent.
+*      APPEND VALUE #(
+*        %tky = agent-%tky
+*        %msg = new_message_with_text(
+*          severity = if_abap_behv_message=>severity-error
+*          text     = 'Stato C: consentito solo inserimento agenti.' )
+*      ) TO reported-agent.
+*      CONTINUE.
+*    ENDIF.
+*
 *    DATA(agent_ziman) = agent-Ziman.
 *
 *            IF agent-ZPCPR IS NOT INITIAL.
@@ -1731,6 +1806,33 @@
 *
 *  METHOD delete.
 *    LOOP AT keys INTO DATA(agent_key).
+*
+*      SELECT SINGLE zstre
+*        FROM /eacm/prdo
+*        WHERE zclpr = @agent_key-Zclpr
+*          AND bukrs = @agent_key-Bukrs
+*          AND vkorg = @agent_key-Vkorg
+*          AND vtweg = @agent_key-Vtweg
+*          AND vbeln = @agent_key-Vbeln
+*          AND gjahr = @agent_key-Gjahr
+*          AND posnr = @agent_key-Posnr
+*          AND zidag = @agent_key-Zidag
+*          AND zcdaz = @agent_key-Zcdaz
+*          AND zstre <> 'D'
+*          AND zmodi <> 'D'
+*        INTO @DATA(agent_delete_zstre).
+*
+*      IF sy-subrc = 0 AND agent_delete_zstre = 'C'.
+*        APPEND VALUE #( %tky = agent_key-%tky ) TO failed-agent.
+*        APPEND VALUE #(
+*          %tky = agent_key-%tky
+*          %msg = new_message_with_text(
+*            severity = if_abap_behv_message=>severity-error
+*            text     = 'Stato C: consentito solo inserimento agenti.' )
+*        ) TO reported-agent.
+*        CONTINUE.
+*      ENDIF.
+*
 *      APPEND VALUE /eacm/prdo(
 *        zclpr = agent_key-Zclpr
 *        bukrs = agent_key-Bukrs
@@ -1949,6 +2051,9 @@
 *
 *    METHODS save REDEFINITION.
 *
+*    METHODS derive_prdo_fields
+*      CHANGING cs_prdo TYPE /eacm/prdo.
+*
 *    METHODS cleanup REDEFINITION.
 *
 *    METHODS cleanup_finalize REDEFINITION.
@@ -2045,6 +2150,74 @@
 *           gjahr = document_to_check-gjahr ] ).
 *        CONTINUE.
 *      ENDIF.
+*
+*      " Resolve company currency before entering the RAP late save phase.
+*      IF line_exists( lcl_buffer=>mt_create_agent[
+*           zclpr = document_to_check-zclpr
+*           bukrs = document_to_check-bukrs
+*           vkorg = document_to_check-vkorg
+*           vtweg = document_to_check-vtweg
+*           vbeln = document_to_check-vbeln
+*           gjahr = document_to_check-gjahr ] )
+*        OR line_exists( lcl_buffer=>mt_update_agent[
+*           zclpr = document_to_check-zclpr
+*           bukrs = document_to_check-bukrs
+*           vkorg = document_to_check-vkorg
+*           vtweg = document_to_check-vtweg
+*           vbeln = document_to_check-vbeln
+*           gjahr = document_to_check-gjahr ] ).
+*        DATA company_currency TYPE /eacm/prdo-z_zwaer.
+*        CLEAR company_currency.
+*        SELECT SINGLE Waers
+*          FROM /EACM/R_T001
+*          WHERE Bukrs = @document_to_check-bukrs
+*          INTO @company_currency.
+*
+*        IF sy-subrc <> 0 OR company_currency IS INITIAL.
+*          APPEND VALUE #(
+*            %pid  = document_to_check-pid
+*            Zclpr = document_to_check-zclpr
+*            Bukrs = document_to_check-bukrs
+*            Vkorg = document_to_check-vkorg
+*            Vtweg = document_to_check-vtweg
+*            Vbeln = document_to_check-vbeln
+*            Gjahr = document_to_check-gjahr
+*          ) TO failed-document.
+*          APPEND VALUE #(
+*            %pid  = document_to_check-pid
+*            Zclpr = document_to_check-zclpr
+*            Bukrs = document_to_check-bukrs
+*            Vkorg = document_to_check-vkorg
+*            Vtweg = document_to_check-vtweg
+*            Vbeln = document_to_check-vbeln
+*            Gjahr = document_to_check-gjahr
+*            %msg  = new_message_with_text(
+*              severity = if_abap_behv_message=>severity-error
+*              text = |Divisa societa non disponibile per { document_to_check-bukrs }.| )
+*          ) TO reported-document.
+*          CONTINUE.
+*        ENDIF.
+*
+*        LOOP AT lcl_buffer=>mt_create_agent ASSIGNING FIELD-SYMBOL(<create_agent_currency>)
+*          WHERE zclpr = document_to_check-zclpr
+*            AND bukrs = document_to_check-bukrs
+*            AND vkorg = document_to_check-vkorg
+*            AND vtweg = document_to_check-vtweg
+*            AND vbeln = document_to_check-vbeln
+*            AND gjahr = document_to_check-gjahr.
+*          <create_agent_currency>-z_zwaer = company_currency.
+*        ENDLOOP.
+*        LOOP AT lcl_buffer=>mt_update_agent ASSIGNING FIELD-SYMBOL(<update_agent_currency>)
+*          WHERE zclpr = document_to_check-zclpr
+*            AND bukrs = document_to_check-bukrs
+*            AND vkorg = document_to_check-vkorg
+*            AND vtweg = document_to_check-vtweg
+*            AND vbeln = document_to_check-vbeln
+*            AND gjahr = document_to_check-gjahr.
+*          <update_agent_currency>-z_zwaer = company_currency.
+*        ENDLOOP.
+*      ENDIF.
+*
 *
 *      DATA(has_agent) = abap_false.
 *
@@ -2587,10 +2760,79 @@
 *    ENDLOOP.
 *  ENDMETHOD.
 *
+*  METHOD derive_prdo_fields.
+*    " Use the effective header date before deriving date-dependent fields.
+*    DATA(previous_date) = cs_prdo-fkdat.
+*    READ TABLE lcl_buffer=>mt_update_document INTO DATA(header_update)
+*      WITH KEY zclpr = cs_prdo-zclpr
+*               bukrs = cs_prdo-bukrs
+*               vkorg = cs_prdo-vkorg
+*               vtweg = cs_prdo-vtweg
+*               vbeln = cs_prdo-vbeln
+*               gjahr = cs_prdo-gjahr.
+*    IF sy-subrc = 0.
+*      cs_prdo-fkdat = header_update-fkdat.
+*    ENDIF.
+*
+*    CLEAR cs_prdo-ztpag.
+*    SELECT ztpag
+*      FROM /eacm/zpraa
+*      WHERE zcdaz = @cs_prdo-zcdaz
+*        AND erdat <= @cs_prdo-fkdat
+*        AND zstre <> 'A'
+*      ORDER BY erdat DESCENDING
+*      INTO @cs_prdo-ztpag
+*      UP TO 1 ROWS.
+*    ENDSELECT.
+*
+*    SELECT SINGLE zflag, zcapr, zcaan, vbtyp, zcspv
+*      FROM /eacm/zpr08
+*      WHERE bukrs = @cs_prdo-bukrs
+*        AND zclpr = @cs_prdo-zclpr
+*      INTO @DATA(classification).
+*    IF sy-subrc <> 0.
+*      RETURN.
+*    ENDIF.
+*
+*    " PR1 FILL_ZCSPV: preserve a reason already stored on an existing row.
+*    IF cs_prdo-zcspv IS INITIAL.
+*      cs_prdo-zcspv = classification-zcspv.
+*    ENDIF.
+*
+*    " SAP identifies SD classes through ZFLAG. Manual defaults do not apply.
+*    IF classification-zflag = abap_true
+*      OR ( classification-zcapr <> abap_true AND classification-zcaan <> abap_true ).
+*      RETURN.
+*    ENDIF.
+*
+*    IF cs_prdo-vbtyp IS INITIAL.
+*      cs_prdo-vbtyp = classification-vbtyp.
+*    ENDIF.
+*    " Called after ADJUST_NUMBERS: VBELN is the final document number.
+*    IF cs_prdo-belnr IS INITIAL.
+*      cs_prdo-belnr = cs_prdo-vbeln.
+*    ENDIF.
+*    IF cs_prdo-bldat IS INITIAL OR previous_date <> cs_prdo-fkdat.
+*      cs_prdo-bldat = cs_prdo-fkdat.
+*    ENDIF.
+*    IF cs_prdo-zvgdt IS INITIAL OR previous_date <> cs_prdo-fkdat.
+*      cs_prdo-zvgdt = cs_prdo-fkdat.
+*    ENDIF.
+*
+*    " PR1 SALVA_GLI_ANTICIPI; retain the SAP precedence of ZCAPR over ZCAAN.
+*    IF classification-zcapr <> abap_true AND classification-zcaan = abap_true.
+*      IF cs_prdo-zdtca IS INITIAL OR previous_date <> cs_prdo-fkdat.
+*        cs_prdo-zdtca = cs_prdo-fkdat(6).
+*      ENDIF.
+*      IF cs_prdo-ztpan IS INITIAL.
+*        cs_prdo-ztpan = 'C'.
+*      ENDIF.
+*    ENDIF.
+*  ENDMETHOD.
+*
 *  METHOD save.
 *    GET TIME STAMP FIELD DATA(now).
-*    DATA system_time TYPE syuzeit.
-**    GET TIME FIELD system_time.
+*    DATA(system_time) = cl_abap_context_info=>get_system_time( ).
 *    DATA(system_date) = cl_abap_context_info=>get_system_date( ).
 *    DATA(user_name) = cl_abap_context_info=>get_user_technical_name( ).
 *
@@ -2691,6 +2933,8 @@
 *        create_agent-zorcr = system_time.
 *      ENDIF.
 *
+*      derive_prdo_fields( CHANGING cs_prdo = create_agent ).
+*
 *      MODIFY /eacm/prdo FROM @create_agent.
 *    ENDLOOP.
 *
@@ -2767,6 +3011,7 @@
 *        INTO @DATA(max_update_zidag).
 *
 *      DATA(new_update_agent) = current_agent.
+*      new_update_agent-z_zwaer = update_agent-z_zwaer.
 *      DATA(new_zidag_number) = CONV i( max_update_zidag ) + 1.
 *      new_update_agent-zidag = CONV /eacm/zidag( |{ new_zidag_number WIDTH = 4 PAD = '0' ALIGN = RIGHT }| ).
 *      new_update_agent-ziman = update_agent-ziman.
@@ -2802,10 +3047,51 @@
 *      new_update_agent-changed_at = now.
 *      new_update_agent-local_last_changed_at = now.
 *
+*      derive_prdo_fields( CHANGING cs_prdo = new_update_agent ).
+*
 *      INSERT /eacm/prdo FROM @new_update_agent.
 *    ENDLOOP.
 *
+*DATA header_rows TYPE STANDARD TABLE OF /eacm/prdo WITH EMPTY KEY.
+*CLEAR header_rows.
+*
 *    LOOP AT lcl_buffer=>mt_update_document INTO DATA(update_document).
+*      " Also refresh derived fields when only the header date is edited.
+*      SELECT FROM /eacm/prdo
+*  FIELDS belnr, bldat, bukrs, fkdat, gjahr, posnr, vbeln, vbtyp,
+*         vkorg, vtweg, zcdaz, zclpr, zcspv, zdtca, zidag,
+*         ztpan, ztpag, zvgdt
+*  WHERE zclpr = @update_document-zclpr
+*    AND bukrs = @update_document-bukrs
+*    AND vkorg = @update_document-vkorg
+*    AND vtweg = @update_document-vtweg
+*    AND vbeln = @update_document-vbeln
+*    AND gjahr = @update_document-gjahr
+*    AND posnr <> '000000'
+*    AND zstre <> 'D'
+*    AND zmodi <> 'D'
+*  INTO CORRESPONDING FIELDS OF TABLE @header_rows.
+*      LOOP AT header_rows INTO DATA(header_row).
+*        derive_prdo_fields( CHANGING cs_prdo = header_row ).
+*        UPDATE /eacm/prdo SET
+*          belnr = @header_row-belnr,
+*          bldat = @header_row-bldat,
+*          zvgdt = @header_row-zvgdt,
+*          vbtyp = @header_row-vbtyp,
+*          zcspv = @header_row-zcspv,
+*          zdtca = @header_row-zdtca,
+*          ztpan = @header_row-ztpan,
+*          ztpag = @header_row-ztpag
+*        WHERE zclpr = @header_row-zclpr
+*          AND bukrs = @header_row-bukrs
+*          AND vkorg = @header_row-vkorg
+*          AND vtweg = @header_row-vtweg
+*          AND vbeln = @header_row-vbeln
+*          AND gjahr = @header_row-gjahr
+*          AND posnr = @header_row-posnr
+*          AND zcdaz = @header_row-zcdaz
+*          AND zidag = @header_row-zidag.
+*      ENDLOOP.
 *      UPDATE /eacm/prdo SET
 *        fkdat = @update_document-fkdat,
 *        waerk = @update_document-waerk,
@@ -2985,6 +3271,216 @@ CLASS lcl_buffer DEFINITION.
 ENDCLASS.
 **********************************************************************
 **********************************************************************
+" SAP PR2 deletion rules. Read persisted data; do not modify pending buffers.
+CLASS lcl_delete_guard DEFINITION FINAL.
+  PUBLIC SECTION.
+    CLASS-METHODS document_blocked
+      IMPORTING is_key            TYPE /eacm/prdo
+      RETURNING VALUE(rv_blocked) TYPE abap_bool.
+    CLASS-METHODS position_blocked
+      IMPORTING is_key            TYPE /eacm/prdo
+      RETURNING VALUE(rv_blocked) TYPE abap_bool.
+    CLASS-METHODS agent_blocked
+      IMPORTING is_key            TYPE /eacm/prdo
+      RETURNING VALUE(rv_blocked) TYPE abap_bool.
+ENDCLASS.
+
+CLASS lcl_delete_guard IMPLEMENTATION.
+  METHOD document_blocked.
+    " PR2 CANCELLA_DOCUMENTO: issued detail or a document posting date.
+    " No GJAHR filter on legacy details, as in SAP PR2.
+    SELECT SINGLE @abap_true FROM /eacm/zprdp
+      WHERE vkorg = @is_key-vkorg AND vtweg = @is_key-vtweg
+        AND zclpr = @is_key-zclpr AND bukrs = @is_key-bukrs
+        AND vbeln = @is_key-vbeln
+        AND zstre = @space AND zdtsf <> '00000000' AND zidfs <> @space
+      INTO @rv_blocked.
+    IF sy-subrc = 0.
+      RETURN.
+    ENDIF.
+    SELECT SINGLE @abap_true FROM /eacm/prdo
+      WHERE vkorg = @is_key-vkorg AND vtweg = @is_key-vtweg
+        AND zclpr = @is_key-zclpr AND bukrs = @is_key-bukrs
+        AND vbeln = @is_key-vbeln AND budat <> '00000000'
+      INTO @rv_blocked.
+  ENDMETHOD.
+
+  METHOD position_blocked.
+    " Preserve the existing RAP C-state block, checking all position agents.
+    SELECT SINGLE @abap_true FROM /eacm/prdo
+      WHERE vkorg = @is_key-vkorg AND vtweg = @is_key-vtweg
+        AND zclpr = @is_key-zclpr AND bukrs = @is_key-bukrs
+        AND vbeln = @is_key-vbeln AND gjahr = @is_key-gjahr
+        AND posnr = @is_key-posnr AND zstre = 'C' AND zmodi <> 'D'
+      INTO @rv_blocked.
+    IF sy-subrc = 0.
+      RETURN.
+    ENDIF.
+    " PR2 CANCELLA_POSIZIONE; restrict to the selected sales area as well.
+    SELECT SINGLE @abap_true FROM /eacm/zprdp
+      WHERE vkorg = @is_key-vkorg AND vtweg = @is_key-vtweg
+        AND zclpr = @is_key-zclpr AND bukrs = @is_key-bukrs
+        AND vbeln = @is_key-vbeln AND posnr = @is_key-posnr
+        AND zstre = @space AND zdtsf <> '00000000'
+      INTO @rv_blocked.
+  ENDMETHOD.
+
+  METHOD agent_blocked.
+    " Keep the RAP C-state block and SAP's BUDAT + ZIMST row protection.
+    SELECT SINGLE @abap_true FROM /eacm/prdo
+      WHERE vkorg = @is_key-vkorg AND vtweg = @is_key-vtweg
+        AND zclpr = @is_key-zclpr AND bukrs = @is_key-bukrs
+        AND vbeln = @is_key-vbeln AND gjahr = @is_key-gjahr
+        AND posnr = @is_key-posnr AND zcdaz = @is_key-zcdaz
+        AND zidag = @is_key-zidag AND zstre <> 'D' AND zmodi <> 'D'
+        AND ( zstre = 'C' OR ( budat <> '00000000' AND zimst <> 0 ) )
+      INTO @rv_blocked.
+    IF sy-subrc = 0.
+      RETURN.
+    ENDIF.
+    " PR2 CHECK_CONTABILIZZATE: block if ANY relevant detail is protected.
+    SELECT SINGLE @abap_true FROM /eacm/zprdp
+      WHERE vkorg = @is_key-vkorg AND vtweg = @is_key-vtweg
+        AND zclpr = @is_key-zclpr AND bukrs = @is_key-bukrs
+        AND vbeln = @is_key-vbeln AND posnr = @is_key-posnr
+        AND zcdaz = @is_key-zcdaz AND zidag = @is_key-zidag
+        AND zstre <> 'D' AND ( zstre = 'C' OR zdtsf <> '00000000' )
+      INTO @rv_blocked.
+  ENDMETHOD.
+ENDCLASS.
+
+" Non-SD alignment. No UI, number-range or SD calculation changes.
+CLASS lcl_manual_rules DEFINITION FINAL.
+  PUBLIC SECTION.
+    CLASS-METHODS is_manual
+      IMPORTING is_key           TYPE /eacm/prdo
+      RETURNING VALUE(rv_manual) TYPE abap_bool.
+    CLASS-METHODS contract_error
+      IMPORTING is_row          TYPE /eacm/prdo
+      RETURNING VALUE(rv_error) TYPE string.
+    CLASS-METHODS amount_error
+      IMPORTING is_row          TYPE /eacm/prdo
+      RETURNING VALUE(rv_error) TYPE string.
+ENDCLASS.
+
+CLASS lcl_manual_rules IMPLEMENTATION.
+  METHOD is_manual.
+    SELECT SINGLE zflag, zcapr, zcaan FROM /eacm/zpr08
+      WHERE bukrs = @is_key-bukrs AND zclpr = @is_key-zclpr
+      INTO @DATA(classification).
+    IF sy-subrc = 0.
+      rv_manual = xsdbool( classification-zflag <> abap_true
+        AND ( classification-zcapr = abap_true OR classification-zcaan = abap_true ) ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD contract_error.
+    IF is_manual( is_row ) = abap_false.
+      RETURN.
+    ENDIF.
+    DATA(reference_date) = is_row-fkdat.
+    DATA(new_document) = abap_false.
+    IF reference_date IS INITIAL.
+      SELECT SINGLE fkdat FROM /eacm/prdo
+        WHERE vkorg = @is_row-vkorg AND vtweg = @is_row-vtweg
+          AND bukrs = @is_row-bukrs AND zclpr = @is_row-zclpr
+          AND vbeln = @is_row-vbeln AND gjahr = @is_row-gjahr
+          AND posnr = @is_row-posnr AND zcdaz = @is_row-zcdaz
+          AND zidag = @is_row-zidag AND zstre <> 'D' AND zmodi <> 'D'
+        INTO @reference_date.
+    ENDIF.
+    READ TABLE lcl_buffer=>mt_create_document_key INTO DATA(created_header)
+      WITH KEY bukrs = is_row-bukrs zclpr = is_row-zclpr
+        vkorg = is_row-vkorg vtweg = is_row-vtweg
+        vbeln = is_row-vbeln gjahr = is_row-gjahr.
+    IF sy-subrc = 0.
+      new_document = abap_true.
+      IF created_header-fkdat IS NOT INITIAL.
+        reference_date = created_header-fkdat.
+      ENDIF.
+    ENDIF.
+    READ TABLE lcl_buffer=>mt_update_document INTO DATA(changed_header)
+      WITH KEY bukrs = is_row-bukrs zclpr = is_row-zclpr
+        vkorg = is_row-vkorg vtweg = is_row-vtweg
+        vbeln = is_row-vbeln gjahr = is_row-gjahr.
+    IF sy-subrc = 0.
+      reference_date = changed_header-fkdat.
+    ENDIF.
+    IF reference_date IS INITIAL.
+      rv_error = 'Inserire la data documento per verificare agente e contratto.'.
+      RETURN.
+    ENDIF.
+    SELECT SINGLE @abap_true FROM /eacm/zpraa
+      WHERE zcdaz = @is_row-zcdaz AND erdat <= @reference_date AND zstre <> 'A'
+      INTO @DATA(agent_exists).
+    IF sy-subrc <> 0.
+      rv_error = |Agente { is_row-zcdaz } non valido alla data { reference_date DATE = USER }.|.
+      RETURN.
+    ENDIF.
+    SELECT SINGLE zcapr, zcaan FROM /eacm/zpr08
+      WHERE bukrs = @is_row-bukrs AND zclpr = @is_row-zclpr
+      INTO @DATA(contract_classification).
+    SELECT zdtin, zdtfi, zggest, zstre FROM /eacm/prcn
+      WHERE zcdaz = @is_row-zcdaz AND bukrs = @is_row-bukrs
+        AND zstre <> 'A' AND zdtin <= @reference_date
+      INTO TABLE @DATA(contracts).
+    LOOP AT contracts INTO DATA(contract).
+      " PR1 anticipi: only blank status. PR2 and PR1 premi exclude A.
+      IF new_document = abap_true AND contract_classification-zcapr <> abap_true
+        AND contract_classification-zcaan = abap_true AND contract-zstre IS NOT INITIAL.
+        CONTINUE.
+      ENDIF.
+      IF contract-zdtfi IS INITIAL.
+        RETURN.
+      ENDIF.
+      DATA(valid_until) = contract-zdtfi.
+      IF new_document = abap_true.
+        valid_until = valid_until + contract-zggest.
+      ENDIF.
+      IF valid_until >= reference_date.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+    rv_error = |Nessun contratto valido per agente { is_row-zcdaz }, societa { is_row-bukrs }, data { reference_date DATE = USER }.|.
+  ENDMETHOD.
+
+  METHOD amount_error.
+    IF is_manual( is_row ) = abap_false.
+      RETURN.
+    ENDIF.
+    " PR2 CONFRONTO_IMPORTO_CONTAB: compare against protected active details.
+    " Sum all protected details, including when unposted details coexist.
+    SELECT ziprv, waerk FROM /eacm/zprdp
+      WHERE vkorg = @is_row-vkorg AND vtweg = @is_row-vtweg
+        AND bukrs = @is_row-bukrs AND zclpr = @is_row-zclpr
+        AND vbeln = @is_row-vbeln AND posnr = @is_row-posnr
+        AND zcdaz = @is_row-zcdaz AND zidag = @is_row-zidag
+        AND zstre <> 'D' AND ( zdtsf <> '00000000' OR zstre = 'C' )
+      INTO TABLE @DATA(protected_details).
+    IF protected_details IS INITIAL.
+      RETURN.
+    ENDIF.
+    SELECT SINGLE waerk FROM /eacm/prdo
+      WHERE vkorg = @is_row-vkorg AND vtweg = @is_row-vtweg
+        AND bukrs = @is_row-bukrs AND zclpr = @is_row-zclpr
+        AND vbeln = @is_row-vbeln AND gjahr = @is_row-gjahr
+        AND posnr = @is_row-posnr AND zcdaz = @is_row-zcdaz
+        AND zidag = @is_row-zidag AND zstre <> 'D' AND zmodi <> 'D'
+      INTO @DATA(document_currency).
+    DATA posted_amount TYPE decfloat34.
+    LOOP AT protected_details INTO DATA(detail).
+      IF detail-waerk IS NOT INITIAL AND detail-waerk <> document_currency.
+        rv_error = 'Valuta dei dettagli contabilizzati diversa dalla valuta documento: verificare i dati.'.
+        RETURN.
+      ENDIF.
+      posted_amount = posted_amount + detail-ziprv.
+    ENDLOOP.
+    IF CONV decfloat34( is_row-zimco ) < posted_amount.
+      rv_error = |Importo provvigione inferiore al maturato gia contabilizzato/emesso ({ posted_amount } { document_currency }).|.
+    ENDIF.
+  ENDMETHOD.
+ENDCLASS.
+
 CLASS lhc_Document DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
 
@@ -3017,7 +3513,7 @@ CLASS lhc_Document DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
 ENDCLASS.
 ****
- CLASS lhc_Document IMPLEMENTATION.
+CLASS lhc_Document IMPLEMENTATION.
   METHOD get_instance_authorizations.
     result = VALUE #( FOR key IN keys
       (
@@ -3127,6 +3623,17 @@ ENDCLASS.
 
   METHOD delete.
     LOOP AT keys INTO DATA(document_key).
+      IF lcl_delete_guard=>document_blocked(
+           CORRESPONDING #( document_key ) ) = abap_true.
+        APPEND VALUE #( %tky = document_key-%tky ) TO failed-document.
+        APPEND VALUE #(
+          %tky = document_key-%tky
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = 'Cancellazione documento non consentita: dettagli emessi o data di contabilizzazione presente.' )
+        ) TO reported-document.
+        CONTINUE.
+      ENDIF.
       APPEND VALUE /eacm/prdo(
         zclpr = document_key-Zclpr
         bukrs = document_key-Bukrs
@@ -3240,7 +3747,7 @@ ENDCLASS.
     CLEAR association_links.
 
     IF line_exists( keys_rba[ %is_draft = if_abap_behv=>mk-on ] ).
-      SELECT FROM /EACM/PRDO_POS_D AS z
+      SELECT FROM /eacm/prdo_pos_d AS z
         INNER JOIN @keys_rba AS k
           ON  z~zclpr = k~Zclpr
           AND z~bukrs = k~Bukrs
@@ -3318,7 +3825,7 @@ ENDCLASS.
             ENDIF.
           ELSEIF ( draft_material IS INITIAL OR draft_materialdescription IS INITIAL OR draft_waerk IS INITIAL OR draft_quantity IS INITIAL )
             AND draft_position-vbeln IS NOT INITIAL.
-            SELECT SINGLE z~matnr,          "#EC WARNOK
+            SELECT SINGLE z~matnr,                          "#EC WARNOK
                           z~maktx,
                           z~waerk,
                           z~menge
@@ -3470,7 +3977,7 @@ ENDCLASS.
         INTO @DATA(max_posnr).
 
       SELECT MAX( posnr )
-        FROM /EACM/PRDO_POS_D
+        FROM /eacm/prdo_pos_d
         WHERE zclpr = @document-Zclpr
           AND bukrs = @document-Bukrs
           AND vkorg = @document-Vkorg
@@ -3606,7 +4113,7 @@ ENDCLASS.
 CLASS lhc_Position IMPLEMENTATION.
 
   METHOD SetPositionDefaults.
-    READ ENTITIES OF /EACM/I_PRDO_DOC IN LOCAL MODE
+    READ ENTITIES OF /eacm/i_prdo_doc IN LOCAL MODE
       ENTITY Position
         FIELDS ( Material MaterialDescription Waerk Quantity )
         WITH CORRESPONDING #( keys )
@@ -3633,11 +4140,11 @@ CLASS lhc_Position IMPLEMENTATION.
         position_waerk = buffered_position-waerk.
         position_quantity = buffered_position-menge.
       ELSE.
-        SELECT SINGLE material,                     "#EC CI_NOORDER
+        SELECT SINGLE material,                         "#EC CI_NOORDER
                       materialdescription,
                       waerk,
                       quantity
-          FROM /EACM/PRDO_POS_D
+          FROM /eacm/prdo_pos_d
           WHERE zclpr = @position-Zclpr
             AND bukrs = @position-Bukrs
             AND vkorg = @position-Vkorg
@@ -3679,7 +4186,7 @@ CLASS lhc_Position IMPLEMENTATION.
         ENDIF.
       ELSEIF ( position_material IS INITIAL OR position_material_description IS INITIAL OR position_waerk IS INITIAL OR position_quantity IS INITIAL )
         AND position-Vbeln IS NOT INITIAL.
-        SELECT SINGLE matnr,                    "#EC CI_NOORDER
+        SELECT SINGLE matnr,                            "#EC CI_NOORDER
                       maktx,
                       waerk,
                       menge
@@ -3721,7 +4228,7 @@ CLASS lhc_Position IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
-      MODIFY ENTITIES OF /EACM/I_PRDO_DOC IN LOCAL MODE
+      MODIFY ENTITIES OF /eacm/i_prdo_doc IN LOCAL MODE
         ENTITY Position
         UPDATE FIELDS ( Material MaterialDescription Waerk Quantity )
         WITH VALUE #(
@@ -3740,54 +4247,65 @@ CLASS lhc_Position IMPLEMENTATION.
 
   METHOD update.
 
-  LOOP AT entities INTO DATA(position).
+    LOOP AT entities INTO DATA(position).
 
-    SELECT SINGLE zstre
-      FROM /eacm/prdo
-      WHERE zclpr = @position-Zclpr
-        AND bukrs = @position-Bukrs
-        AND vkorg = @position-Vkorg
-        AND vtweg = @position-Vtweg
-        AND vbeln = @position-Vbeln
-        AND gjahr = @position-Gjahr
-        AND posnr = @position-Posnr
-        AND zstre <> 'D'
-        AND zmodi <> 'D'
-      INTO @DATA(position_zstre).
+      SELECT SINGLE zstre                               "#EC CI_NOORDER
+        FROM /eacm/prdo
+        WHERE zclpr = @position-Zclpr
+          AND bukrs = @position-Bukrs
+          AND vkorg = @position-Vkorg
+          AND vtweg = @position-Vtweg
+          AND vbeln = @position-Vbeln
+          AND gjahr = @position-Gjahr
+          AND posnr = @position-Posnr
+          AND zstre <> 'D'
+          AND zmodi <> 'D'
+        INTO @DATA(position_zstre).
 
-    IF sy-subrc = 0 AND position_zstre = 'C'.
-      APPEND VALUE #( %tky = position-%tky ) TO failed-position.
-      APPEND VALUE #(
-        %tky = position-%tky
-        %msg = new_message_with_text(
-          severity = if_abap_behv_message=>severity-error
-          text     = 'Stato C: consentito solo inserimento righe' )
-      ) TO reported-position.
-      CONTINUE.
-    ENDIF.
+      IF sy-subrc = 0 AND position_zstre = 'C'.
+        APPEND VALUE #( %tky = position-%tky ) TO failed-position.
+        APPEND VALUE #(
+          %tky = position-%tky
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text     = 'Stato C: consentito solo inserimento righe' )
+        ) TO reported-position.
+        CONTINUE.
+      ENDIF.
 
-    APPEND VALUE /eacm/prdo(
-      zclpr = position-Zclpr
-      bukrs = position-Bukrs
-      vkorg = position-Vkorg
-      vtweg = position-Vtweg
-      vbeln = position-Vbeln
-      gjahr = position-Gjahr
-      posnr = position-Posnr
-      matnr = position-Material
-      maktx = position-MaterialDescription
-      waerk = position-Waerk
-      zwaer = position-Waerk
-      menge = position-Quantity
-    ) TO lcl_buffer=>mt_update_position.
+      APPEND VALUE /eacm/prdo(
+        zclpr = position-Zclpr
+        bukrs = position-Bukrs
+        vkorg = position-Vkorg
+        vtweg = position-Vtweg
+        vbeln = position-Vbeln
+        gjahr = position-Gjahr
+        posnr = position-Posnr
+        matnr = position-Material
+        maktx = position-MaterialDescription
+        waerk = position-Waerk
+        zwaer = position-Waerk
+        menge = position-Quantity
+      ) TO lcl_buffer=>mt_update_position.
 
-  ENDLOOP.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD delete.
     LOOP AT keys INTO DATA(position_key).
+      IF lcl_delete_guard=>position_blocked(
+           CORRESPONDING #( position_key ) ) = abap_true.
+        APPEND VALUE #( %tky = position_key-%tky ) TO failed-position.
+        APPEND VALUE #(
+          %tky = position_key-%tky
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = 'Cancellazione posizione non consentita: dettagli emessi o stato C presente.' )
+        ) TO reported-position.
+        CONTINUE.
+      ENDIF.
 
-      SELECT SINGLE zstre
+      SELECT SINGLE zstre                               "#EC CI_NOORDER
         FROM /eacm/prdo
         WHERE zclpr = @position_key-Zclpr
           AND bukrs = @position_key-Bukrs
@@ -3834,7 +4352,7 @@ CLASS lhc_Position IMPLEMENTATION.
           CONTINUE.
         ENDIF.
 
-        SELECT SINGLE zclpr,                    "#EC CI_NOORDER
+        SELECT SINGLE zclpr,                            "#EC CI_NOORDER
                       bukrs,
                       vkorg,
                       vtweg,
@@ -3846,7 +4364,7 @@ CLASS lhc_Position IMPLEMENTATION.
                       waerk,
                       quantity,
                       locallastchangedat
-          FROM /EACM/PRDO_POS_D
+          FROM /eacm/prdo_pos_d
           WHERE zclpr = @draft_position_key-Zclpr
             AND bukrs = @draft_position_key-Bukrs
             AND vkorg = @draft_position_key-Vkorg
@@ -4065,7 +4583,7 @@ CLASS lhc_Position IMPLEMENTATION.
     CLEAR association_links.
 
     IF line_exists( keys_rba[ %is_draft = if_abap_behv=>mk-on ] ).
-      SELECT FROM /EACM/PRDO_AGT_D AS z
+      SELECT FROM /eacm/prdo_agt_d AS z
         INNER JOIN @keys_rba AS k
           ON  z~zclpr = k~Zclpr
           AND z~bukrs = k~Bukrs
@@ -4309,7 +4827,7 @@ CLASS lhc_Position IMPLEMENTATION.
               INTO @DATA(max_zidag).
 
             SELECT MAX( zidag )
-              FROM /EACM/PRDO_AGT_D
+              FROM /eacm/prdo_agt_d
               WHERE zclpr = @position-Zclpr
                 AND bukrs = @position-Bukrs
                 AND vkorg = @position-Vkorg
@@ -4388,11 +4906,11 @@ CLASS lhc_Position IMPLEMENTATION.
                 position_fkdat = active_position_data-fkdat.
                 position_waerk = active_position_data-waerk.
               ELSE.
-                SELECT SINGLE material,                     "#EC CI_NOORDER
+                SELECT SINGLE material,                 "#EC CI_NOORDER
                               materialdescription,
                               waerk,
                               quantity
-                  FROM /EACM/PRDO_POS_D
+                  FROM /eacm/prdo_pos_d
                   WHERE zclpr = @position-Zclpr
                     AND bukrs = @position-Bukrs
                     AND vkorg = @position-Vkorg
@@ -4409,30 +4927,30 @@ CLASS lhc_Position IMPLEMENTATION.
                   position_quantity = draft_position_data-quantity.
                 ENDIF.
 
-IF position_waerk IS INITIAL.
-  READ ENTITIES OF /EACM/I_PRDO_DOC IN LOCAL MODE
-    ENTITY Position
-      FIELDS ( Waerk )
-      WITH VALUE #(
-        (
-          %is_draft = if_abap_behv=>mk-on
-          Zclpr = position-Zclpr
-          Bukrs = position-Bukrs
-          Vkorg = position-Vkorg
-          Vtweg = position-Vtweg
-          Vbeln = position-Vbeln
-          Gjahr = position-Gjahr
-          Posnr = position-Posnr
-        )
-      )
-      RESULT DATA(read_positions).
+                IF position_waerk IS INITIAL.
+                  READ ENTITIES OF /eacm/i_prdo_doc IN LOCAL MODE
+                    ENTITY Position
+                      FIELDS ( Waerk )
+                      WITH VALUE #(
+                        (
+                          %is_draft = if_abap_behv=>mk-on
+                          Zclpr = position-Zclpr
+                          Bukrs = position-Bukrs
+                          Vkorg = position-Vkorg
+                          Vtweg = position-Vtweg
+                          Vbeln = position-Vbeln
+                          Gjahr = position-Gjahr
+                          Posnr = position-Posnr
+                        )
+                      )
+                      RESULT DATA(read_positions).
 
-  READ TABLE read_positions INTO DATA(read_position) INDEX 1.
+                  READ TABLE read_positions INTO DATA(read_position) INDEX 1.
 
-  IF sy-subrc = 0.
-    position_waerk = read_position-Waerk.
-  ENDIF.
-ENDIF.
+                  IF sy-subrc = 0.
+                    position_waerk = read_position-Waerk.
+                  ENDIF.
+                ENDIF.
 
                 IF ( position_material IS INITIAL OR position_material_description IS INITIAL OR position_unitmeasure IS INITIAL OR position_waerk IS INITIAL OR position_quantity IS INITIAL )
                   AND ( position-Vbeln IS INITIAL OR position-Vbeln(1) = 'D' ).
@@ -4512,8 +5030,8 @@ ENDIF.
 
             DATA(agent_ziman) = agent-Ziman.
 
-            IF agent-ZPCPR IS NOT INITIAL.
-agent-ZIMCO = agent-ZIMPP * agent-ZPCPR / 100.
+            IF agent-zpcpr IS NOT INITIAL.
+              agent-zimco = agent-zimpp * agent-zpcpr / 100.
             ENDIF.
 
             DATA(agent_zpcpr) = agent-Zpcpr.
@@ -4631,103 +5149,161 @@ CLASS lhc_Agent DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys_rba FOR READ Agent\_Position FULL result_requested RESULT result LINK association_links.
 
     METHODS CalculateZimco
-  FOR DETERMINE ON MODIFY
-  IMPORTING keys FOR Agent~CalculateZimco.
+      FOR DETERMINE ON MODIFY
+      IMPORTING keys FOR Agent~CalculateZimco.
 
 ENDCLASS.
 **********************************************************************
 CLASS lhc_Agent IMPLEMENTATION.
 
-METHOD update.
+  METHOD update.
 
-LOOP AT entities INTO DATA(agent).
+    LOOP AT entities INTO DATA(agent).
+      IF lcl_manual_rules=>is_manual( CORRESPONDING #( agent ) ) = abap_true.
+        SELECT SINGLE * FROM /eacm/prdo       "#EC CI_ALL_FIELDS_NEEDED
+          WHERE vkorg = @agent-Vkorg AND vtweg = @agent-Vtweg
+            AND bukrs = @agent-Bukrs AND zclpr = @agent-Zclpr
+            AND vbeln = @agent-Vbeln AND gjahr = @agent-Gjahr
+            AND posnr = @agent-Posnr AND zcdaz = @agent-Zcdaz
+            AND zidag = @agent-Zidag AND zstre <> 'D' AND zmodi <> 'D'
+          INTO @DATA(active_agent_input).
+        IF sy-subrc = 0.
+          IF agent-%control-Ziman <> if_abap_behv=>mk-on.
+            agent-Ziman = active_agent_input-ziman.
+          ENDIF.
+          IF agent-%control-Zimar <> if_abap_behv=>mk-on.
+            agent-Zimar = active_agent_input-zimar.
+          ENDIF.
+          IF agent-%control-Zpcpr <> if_abap_behv=>mk-on.
+            agent-Zpcpr = active_agent_input-zpcpr.
+          ENDIF.
+          IF agent-%control-Zimpp <> if_abap_behv=>mk-on.
+            agent-Zimpp = active_agent_input-zimpp.
+          ENDIF.
+          IF agent-%control-Zimco <> if_abap_behv=>mk-on.
+            agent-Zimco = active_agent_input-zimco.
+          ENDIF.
+          IF agent-%control-Zimpu <> if_abap_behv=>mk-on.
+            agent-Zimpu = active_agent_input-zimpu.
+          ENDIF.
+          IF agent-%control-Zwaer <> if_abap_behv=>mk-on.
+            agent-Zwaer = active_agent_input-zwaer.
+          ENDIF.
+          IF agent-%control-Kunrg <> if_abap_behv=>mk-on.
+            agent-Kunrg = active_agent_input-kunrg.
+          ENDIF.
+          IF agent-%control-Budat <> if_abap_behv=>mk-on.
+            agent-Budat = active_agent_input-budat.
+          ENDIF.
+          IF agent-%control-Kurrf <> if_abap_behv=>mk-on.
+            agent-Kurrf = active_agent_input-kurrf.
+          ENDIF.
+          IF agent-%control-Ztpag <> if_abap_behv=>mk-on.
+            agent-Ztpag = active_agent_input-ztpag.
+          ENDIF.
+          IF agent-%control-Zdest <> if_abap_behv=>mk-on.
+            agent-Zdest = active_agent_input-zdest.
+          ENDIF.
+        ENDIF.
+      ENDIF.
 
-    SELECT SINGLE zstre
-      FROM /eacm/prdo
-      WHERE zclpr = @agent-Zclpr
-        AND bukrs = @agent-Bukrs
-        AND vkorg = @agent-Vkorg
-        AND vtweg = @agent-Vtweg
-        AND vbeln = @agent-Vbeln
-        AND gjahr = @agent-Gjahr
-        AND posnr = @agent-Posnr
-        AND zidag = @agent-Zidag
-        AND zcdaz = @agent-Zcdaz
-        AND zstre <> 'D'
-        AND zmodi <> 'D'
-      INTO @DATA(agent_zstre).
+      SELECT SINGLE zstre
+        FROM /eacm/prdo
+        WHERE zclpr = @agent-Zclpr
+          AND bukrs = @agent-Bukrs
+          AND vkorg = @agent-Vkorg
+          AND vtweg = @agent-Vtweg
+          AND vbeln = @agent-Vbeln
+          AND gjahr = @agent-Gjahr
+          AND posnr = @agent-Posnr
+          AND zidag = @agent-Zidag
+          AND zcdaz = @agent-Zcdaz
+          AND zstre <> 'D'
+          AND zmodi <> 'D'
+        INTO @DATA(agent_zstre).
 
-    IF sy-subrc = 0 AND agent_zstre = 'C'.
-      APPEND VALUE #( %tky = agent-%tky ) TO failed-agent.
-      APPEND VALUE #(
-        %tky = agent-%tky
-        %msg = new_message_with_text(
-          severity = if_abap_behv_message=>severity-error
-          text     = 'Stato C: consentito solo inserimento agenti.' )
-      ) TO reported-agent.
-      CONTINUE.
-    ENDIF.
+      IF sy-subrc = 0 AND agent_zstre = 'C'.
+        APPEND VALUE #( %tky = agent-%tky ) TO failed-agent.
+        APPEND VALUE #(
+          %tky = agent-%tky
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text     = 'Stato C: consentito solo inserimento agenti.' )
+        ) TO reported-agent.
+        CONTINUE.
+      ENDIF.
 
-    DATA(agent_ziman) = agent-Ziman.
+      DATA(agent_ziman) = agent-Ziman.
 
-            IF agent-ZPCPR IS NOT INITIAL.
-agent-ZIMCO = agent-ZIMPP * agent-ZPCPR / 100.
-            ENDIF.
+      IF agent-zpcpr IS NOT INITIAL.
+        agent-zimco = agent-zimpp * agent-zpcpr / 100.
+      ENDIF.
 
-    DATA(agent_zpcpr) = agent-Zpcpr.
-    DATA(agent_zimpp) = agent-Zimpp.
-    DATA(agent_zimco) = agent-Zimco.
+      DATA(agent_zpcpr) = agent-Zpcpr.
+      DATA(agent_zimpp) = agent-Zimpp.
+      DATA(agent_zimco) = agent-Zimco.
 
-    IF ( agent_zpcpr IS INITIAL AND agent_zimpp IS NOT INITIAL )
-      OR ( agent_zpcpr IS NOT INITIAL AND agent_zimpp IS INITIAL ).
-      APPEND VALUE #( %tky = agent-%tky ) TO failed-agent.
-      APPEND VALUE #(
-        %tky           = agent-%tky
-        %element-Zpcpr = if_abap_behv=>mk-on
-        %element-Zimpp = if_abap_behv=>mk-on
-        %element-Zimco = if_abap_behv=>mk-on
-        %msg           = new_message_with_text(
-          severity = if_abap_behv_message=>severity-error
-          text     = 'Inserire % Prov e Base di Calcolo insieme, oppure solo Importo Provvigione.' )
-      ) TO reported-agent.
-      CONTINUE.
-    ENDIF.
+      IF ( agent_zpcpr IS INITIAL AND agent_zimpp IS NOT INITIAL )
+        OR ( agent_zpcpr IS NOT INITIAL AND agent_zimpp IS INITIAL ).
+        APPEND VALUE #( %tky = agent-%tky ) TO failed-agent.
+        APPEND VALUE #(
+          %tky           = agent-%tky
+          %element-Zpcpr = if_abap_behv=>mk-on
+          %element-Zimpp = if_abap_behv=>mk-on
+          %element-Zimco = if_abap_behv=>mk-on
+          %msg           = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text     = 'Inserire % Prov e Base di Calcolo insieme, oppure solo Importo Provvigione.' )
+        ) TO reported-agent.
+        CONTINUE.
+      ENDIF.
 
-    IF agent_zpcpr IS NOT INITIAL
-      AND agent_zimpp IS NOT INITIAL.
-      agent_zimco = agent_zimpp * agent_zpcpr / 100.
-    ENDIF.
+      IF agent_zpcpr IS NOT INITIAL
+        AND agent_zimpp IS NOT INITIAL.
+        agent_zimco = agent_zimpp * agent_zpcpr / 100.
+      ENDIF.
 
-    APPEND VALUE /eacm/prdo(
-      zclpr = agent-Zclpr
-      bukrs = agent-Bukrs
-      vkorg = agent-Vkorg
-      vtweg = agent-Vtweg
-      vbeln = agent-Vbeln
-      gjahr = agent-Gjahr
-      posnr = agent-Posnr
-      zidag = agent-Zidag
-      zcdaz = agent-Zcdaz
-      ziman = agent_ziman
-      zimar = agent-Zimar
-      zpcpr = agent_zpcpr
-      zimpp = agent_zimpp
-      zimco = agent_zimco
-      zimpu = agent-Zimpu
-      zwaer = agent-Zwaer
-      kunrg = agent-Kunrg
-      budat = agent-Budat
-      kurrf = agent-Kurrf
-      ztpag = agent-Ztpag
-      zdest = agent-Zdest
-    ) TO lcl_buffer=>mt_update_agent.
+      APPEND VALUE /eacm/prdo(
+        zclpr = agent-Zclpr
+        bukrs = agent-Bukrs
+        vkorg = agent-Vkorg
+        vtweg = agent-Vtweg
+        vbeln = agent-Vbeln
+        gjahr = agent-Gjahr
+        posnr = agent-Posnr
+        zidag = agent-Zidag
+        zcdaz = agent-Zcdaz
+        ziman = agent_ziman
+        zimar = agent-Zimar
+        zpcpr = agent_zpcpr
+        zimpp = agent_zimpp
+        zimco = agent_zimco
+        zimpu = agent-Zimpu
+        zwaer = agent-Zwaer
+        kunrg = agent-Kunrg
+        budat = agent-Budat
+        kurrf = agent-Kurrf
+        ztpag = agent-Ztpag
+        zdest = agent-Zdest
+      ) TO lcl_buffer=>mt_update_agent.
 
-  ENDLOOP.
+    ENDLOOP.
 
   ENDMETHOD.
 
   METHOD delete.
     LOOP AT keys INTO DATA(agent_key).
+      IF lcl_delete_guard=>agent_blocked(
+           CORRESPONDING #( agent_key ) ) = abap_true.
+        APPEND VALUE #( %tky = agent_key-%tky ) TO failed-agent.
+        APPEND VALUE #(
+          %tky = agent_key-%tky
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = 'Cancellazione agente non consentita: dettagli contabilizzati/emessi o importi contabilizzati presenti.' )
+        ) TO reported-agent.
+        CONTINUE.
+      ENDIF.
 
       SELECT SINGLE zstre
         FROM /eacm/prdo
@@ -4918,36 +5494,36 @@ agent-ZIMCO = agent-ZIMPP * agent-ZPCPR / 100.
 
   METHOD CalculateZimco.
 
-  READ ENTITIES OF /EACM/I_PRDO_DOC IN LOCAL MODE
-    ENTITY Agent
-    FIELDS ( ZIMPP ZPCPR )
-    WITH CORRESPONDING #( keys )
-    RESULT DATA(lt_agents).
+    READ ENTITIES OF /eacm/i_prdo_doc IN LOCAL MODE
+      ENTITY Agent
+      FIELDS ( zimpp zpcpr )
+      WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_agents).
 
-  LOOP AT lt_agents ASSIGNING FIELD-SYMBOL(<agent>).
+    LOOP AT lt_agents ASSIGNING FIELD-SYMBOL(<agent>).
 
-    IF <agent>-ZPCPR IS NOT INITIAL.
-      <agent>-ZIMCO = <agent>-ZIMPP * <agent>-ZPCPR / 100.
-    ELSE.
-      CLEAR <agent>-ZIMCO.
-    ENDIF.
+      IF <agent>-zpcpr IS NOT INITIAL.
+        <agent>-zimco = <agent>-zimpp * <agent>-zpcpr / 100.
+      ELSE.
+        CLEAR <agent>-zimco.
+      ENDIF.
 
-  ENDLOOP.
+    ENDLOOP.
 
-  MODIFY ENTITIES OF /EACM/I_PRDO_DOC IN LOCAL MODE
-    ENTITY Agent
-    UPDATE FIELDS ( ZIMCO )
-    WITH VALUE #(
-      FOR ls_agent IN lt_agents
-      (
-        %tky  = ls_agent-%tky
-        ZIMCO = ls_agent-ZIMCO
+    MODIFY ENTITIES OF /eacm/i_prdo_doc IN LOCAL MODE
+      ENTITY Agent
+      UPDATE FIELDS ( zimco )
+      WITH VALUE #(
+        FOR ls_agent IN lt_agents
+        (
+          %tky  = ls_agent-%tky
+          zimco = ls_agent-zimco
+        )
       )
-    )
-    FAILED DATA(lt_failed)
-    REPORTED DATA(lt_reported).
+      FAILED DATA(lt_failed)
+      REPORTED DATA(lt_reported).
 
-ENDMETHOD.
+  ENDMETHOD.
 
 
 
@@ -4973,6 +5549,9 @@ CLASS lsc_I_PRDO_DOC DEFINITION INHERITING FROM cl_abap_behavior_saver.
 
     METHODS save REDEFINITION.
 
+    METHODS derive_prdo_fields
+      CHANGING cs_prdo TYPE /eacm/prdo.
+
     METHODS cleanup REDEFINITION.
 
     METHODS cleanup_finalize REDEFINITION.
@@ -4981,10 +5560,171 @@ ENDCLASS.
 
 CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
 
- METHOD finalize.
+  METHOD finalize.
   ENDMETHOD.
 
   METHOD check_before_save.
+    DATA contract_candidates TYPE STANDARD TABLE OF /eacm/prdo WITH EMPTY KEY.
+    contract_candidates = lcl_buffer=>mt_create_agent.
+    APPEND LINES OF lcl_buffer=>mt_update_agent TO contract_candidates.
+    LOOP AT lcl_buffer=>mt_update_document INTO DATA(contract_header).
+      SELECT * FROM /eacm/prdo                "#EC CI_ALL_FIELDS_NEEDED
+        WHERE bukrs = @contract_header-bukrs AND zclpr = @contract_header-zclpr
+          AND vkorg = @contract_header-vkorg AND vtweg = @contract_header-vtweg
+          AND vbeln = @contract_header-vbeln AND gjahr = @contract_header-gjahr
+          AND posnr <> '000000' AND zstre <> 'D' AND zmodi <> 'D'
+        APPENDING TABLE @contract_candidates.
+    ENDLOOP.
+    SORT contract_candidates BY bukrs zclpr vkorg vtweg vbeln gjahr posnr zcdaz zidag.
+    DELETE ADJACENT DUPLICATES FROM contract_candidates
+      COMPARING bukrs zclpr vkorg vtweg vbeln gjahr posnr zcdaz zidag.
+    LOOP AT contract_candidates INTO DATA(contract_candidate).
+      IF line_exists( lcl_buffer=>mt_delete_document[
+           bukrs = contract_candidate-bukrs zclpr = contract_candidate-zclpr
+           vkorg = contract_candidate-vkorg vtweg = contract_candidate-vtweg
+           vbeln = contract_candidate-vbeln gjahr = contract_candidate-gjahr ] )
+        OR line_exists( lcl_buffer=>mt_delete_position[
+           bukrs = contract_candidate-bukrs zclpr = contract_candidate-zclpr
+           vkorg = contract_candidate-vkorg vtweg = contract_candidate-vtweg
+           vbeln = contract_candidate-vbeln gjahr = contract_candidate-gjahr
+           posnr = contract_candidate-posnr ] )
+        OR line_exists( lcl_buffer=>mt_delete_agent[
+           bukrs = contract_candidate-bukrs zclpr = contract_candidate-zclpr
+           vkorg = contract_candidate-vkorg vtweg = contract_candidate-vtweg
+           vbeln = contract_candidate-vbeln gjahr = contract_candidate-gjahr
+           posnr = contract_candidate-posnr zcdaz = contract_candidate-zcdaz
+           zidag = contract_candidate-zidag ] ).
+        CONTINUE.
+      ENDIF.
+      DATA(contract_message) = lcl_manual_rules=>contract_error( contract_candidate ).
+      IF contract_message IS NOT INITIAL.
+        DATA contract_document_pid TYPE sysuuid_x16.
+        CLEAR contract_document_pid.
+        READ TABLE lcl_buffer=>mt_create_document_key INTO DATA(contract_created_header)
+          WITH KEY bukrs = contract_candidate-bukrs zclpr = contract_candidate-zclpr
+            vkorg = contract_candidate-vkorg vtweg = contract_candidate-vtweg
+            vbeln = contract_candidate-vbeln gjahr = contract_candidate-gjahr.
+        IF sy-subrc = 0.
+          contract_document_pid = contract_created_header-pid.
+        ENDIF.
+        APPEND VALUE #(
+          %pid = contract_document_pid
+          Zclpr = contract_candidate-zclpr Bukrs = contract_candidate-bukrs
+          Vkorg = contract_candidate-vkorg Vtweg = contract_candidate-vtweg
+          Vbeln = contract_candidate-vbeln Gjahr = contract_candidate-gjahr
+        ) TO failed-document.
+        APPEND VALUE #(
+          %pid = contract_document_pid
+          Zclpr = contract_candidate-zclpr Bukrs = contract_candidate-bukrs
+          Vkorg = contract_candidate-vkorg Vtweg = contract_candidate-vtweg
+          Vbeln = contract_candidate-vbeln Gjahr = contract_candidate-gjahr
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = contract_message )
+        ) TO reported-document.
+      ENDIF.
+    ENDLOOP.
+    LOOP AT lcl_buffer=>mt_update_agent INTO DATA(amount_candidate).
+      DATA(amount_message) = lcl_manual_rules=>amount_error( amount_candidate ).
+      IF amount_message IS NOT INITIAL.
+        APPEND VALUE #(
+          Zclpr = amount_candidate-zclpr Bukrs = amount_candidate-bukrs
+          Vkorg = amount_candidate-vkorg Vtweg = amount_candidate-vtweg
+          Vbeln = amount_candidate-vbeln Gjahr = amount_candidate-gjahr
+          Posnr = amount_candidate-posnr Zcdaz = amount_candidate-zcdaz
+          Zidag = amount_candidate-zidag
+        ) TO failed-agent.
+        APPEND VALUE #(
+          Zclpr = amount_candidate-zclpr Bukrs = amount_candidate-bukrs
+          Vkorg = amount_candidate-vkorg Vtweg = amount_candidate-vtweg
+          Vbeln = amount_candidate-vbeln Gjahr = amount_candidate-gjahr
+          Posnr = amount_candidate-posnr Zcdaz = amount_candidate-zcdaz
+          Zidag = amount_candidate-zidag
+          %element-Zimco = if_abap_behv=>mk-on
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = amount_message )
+        ) TO reported-agent.
+      ENDIF.
+    ENDLOOP.
+    " Recheck all pending deletions before SAVE, including root deletions.
+    LOOP AT lcl_buffer=>mt_delete_document INTO DATA(pending_delete_document).
+      IF lcl_delete_guard=>document_blocked( pending_delete_document ) = abap_true.
+        APPEND VALUE #(
+            Zclpr = pending_delete_document-zclpr
+            Bukrs = pending_delete_document-bukrs
+            Vkorg = pending_delete_document-vkorg
+            Vtweg = pending_delete_document-vtweg
+            Vbeln = pending_delete_document-vbeln
+            Gjahr = pending_delete_document-gjahr
+        ) TO failed-document.
+        APPEND VALUE #(
+            Zclpr = pending_delete_document-zclpr
+            Bukrs = pending_delete_document-bukrs
+            Vkorg = pending_delete_document-vkorg
+            Vtweg = pending_delete_document-vtweg
+            Vbeln = pending_delete_document-vbeln
+            Gjahr = pending_delete_document-gjahr
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = 'Cancellazione documento non consentita: dettagli emessi o data di contabilizzazione presente.' )
+        ) TO reported-document.
+      ENDIF.
+    ENDLOOP.
+    LOOP AT lcl_buffer=>mt_delete_position INTO DATA(pending_delete_position).
+      IF lcl_delete_guard=>position_blocked( pending_delete_position ) = abap_true.
+        APPEND VALUE #(
+            Zclpr = pending_delete_position-zclpr
+            Bukrs = pending_delete_position-bukrs
+            Vkorg = pending_delete_position-vkorg
+            Vtweg = pending_delete_position-vtweg
+            Vbeln = pending_delete_position-vbeln
+            Gjahr = pending_delete_position-gjahr
+            Posnr = pending_delete_position-posnr
+        ) TO failed-position.
+        APPEND VALUE #(
+            Zclpr = pending_delete_position-zclpr
+            Bukrs = pending_delete_position-bukrs
+            Vkorg = pending_delete_position-vkorg
+            Vtweg = pending_delete_position-vtweg
+            Vbeln = pending_delete_position-vbeln
+            Gjahr = pending_delete_position-gjahr
+            Posnr = pending_delete_position-posnr
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = 'Cancellazione posizione non consentita: dettagli emessi o stato C presente.' )
+        ) TO reported-position.
+      ENDIF.
+    ENDLOOP.
+    LOOP AT lcl_buffer=>mt_delete_agent INTO DATA(pending_delete_agent).
+      IF lcl_delete_guard=>agent_blocked( pending_delete_agent ) = abap_true.
+        APPEND VALUE #(
+            Zclpr = pending_delete_agent-zclpr
+            Bukrs = pending_delete_agent-bukrs
+            Vkorg = pending_delete_agent-vkorg
+            Vtweg = pending_delete_agent-vtweg
+            Vbeln = pending_delete_agent-vbeln
+            Gjahr = pending_delete_agent-gjahr
+            Posnr = pending_delete_agent-posnr
+            Zcdaz = pending_delete_agent-zcdaz
+            Zidag = pending_delete_agent-zidag
+        ) TO failed-agent.
+        APPEND VALUE #(
+            Zclpr = pending_delete_agent-zclpr
+            Bukrs = pending_delete_agent-bukrs
+            Vkorg = pending_delete_agent-vkorg
+            Vtweg = pending_delete_agent-vtweg
+            Vbeln = pending_delete_agent-vbeln
+            Gjahr = pending_delete_agent-gjahr
+            Posnr = pending_delete_agent-posnr
+            Zcdaz = pending_delete_agent-zcdaz
+            Zidag = pending_delete_agent-zidag
+          %msg = new_message_with_text(
+            severity = if_abap_behv_message=>severity-error
+            text = 'Cancellazione agente non consentita: dettagli contabilizzati/emessi o importi contabilizzati presenti.' )
+        ) TO reported-agent.
+      ENDIF.
+    ENDLOOP.
     DATA documents_to_check TYPE STANDARD TABLE OF lcl_buffer=>ty_create_document_key.
 
     documents_to_check = lcl_buffer=>mt_create_document_key.
@@ -5070,6 +5810,74 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
         CONTINUE.
       ENDIF.
 
+      " Resolve company currency before entering the RAP late save phase.
+      IF line_exists( lcl_buffer=>mt_create_agent[
+           zclpr = document_to_check-zclpr
+           bukrs = document_to_check-bukrs
+           vkorg = document_to_check-vkorg
+           vtweg = document_to_check-vtweg
+           vbeln = document_to_check-vbeln
+           gjahr = document_to_check-gjahr ] )
+        OR line_exists( lcl_buffer=>mt_update_agent[
+           zclpr = document_to_check-zclpr
+           bukrs = document_to_check-bukrs
+           vkorg = document_to_check-vkorg
+           vtweg = document_to_check-vtweg
+           vbeln = document_to_check-vbeln
+           gjahr = document_to_check-gjahr ] ).
+        DATA company_currency TYPE /eacm/prdo-z_zwaer.
+        CLEAR company_currency.
+        SELECT SINGLE Waers
+          FROM /eacm/r_t001
+          WHERE Bukrs = @document_to_check-bukrs
+          INTO @company_currency.
+
+        IF sy-subrc <> 0 OR company_currency IS INITIAL.
+          APPEND VALUE #(
+            %pid  = document_to_check-pid
+            Zclpr = document_to_check-zclpr
+            Bukrs = document_to_check-bukrs
+            Vkorg = document_to_check-vkorg
+            Vtweg = document_to_check-vtweg
+            Vbeln = document_to_check-vbeln
+            Gjahr = document_to_check-gjahr
+          ) TO failed-document.
+          APPEND VALUE #(
+            %pid  = document_to_check-pid
+            Zclpr = document_to_check-zclpr
+            Bukrs = document_to_check-bukrs
+            Vkorg = document_to_check-vkorg
+            Vtweg = document_to_check-vtweg
+            Vbeln = document_to_check-vbeln
+            Gjahr = document_to_check-gjahr
+            %msg  = new_message_with_text(
+              severity = if_abap_behv_message=>severity-error
+              text = |Divisa societa non disponibile per { document_to_check-bukrs }.| )
+          ) TO reported-document.
+          CONTINUE.
+        ENDIF.
+
+        LOOP AT lcl_buffer=>mt_create_agent ASSIGNING FIELD-SYMBOL(<create_agent_currency>)
+          WHERE zclpr = document_to_check-zclpr
+            AND bukrs = document_to_check-bukrs
+            AND vkorg = document_to_check-vkorg
+            AND vtweg = document_to_check-vtweg
+            AND vbeln = document_to_check-vbeln
+            AND gjahr = document_to_check-gjahr.
+          <create_agent_currency>-z_zwaer = company_currency.
+        ENDLOOP.
+        LOOP AT lcl_buffer=>mt_update_agent ASSIGNING FIELD-SYMBOL(<update_agent_currency>)
+          WHERE zclpr = document_to_check-zclpr
+            AND bukrs = document_to_check-bukrs
+            AND vkorg = document_to_check-vkorg
+            AND vtweg = document_to_check-vtweg
+            AND vbeln = document_to_check-vbeln
+            AND gjahr = document_to_check-gjahr.
+          <update_agent_currency>-z_zwaer = company_currency.
+        ENDLOOP.
+      ENDIF.
+
+
       DATA(has_agent) = abap_false.
 
       LOOP AT lcl_buffer=>mt_create_agent INTO DATA(create_agent)
@@ -5088,7 +5896,7 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
 
       IF has_agent = abap_false.
         SELECT SINGLE zidag
-          FROM /EACM/PRDO_AGT_D
+          FROM /eacm/prdo_agt_d
           WHERE zclpr = @document_to_check-zclpr
             AND bukrs = @document_to_check-bukrs
             AND vkorg = @document_to_check-vkorg
@@ -5129,7 +5937,7 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
               AND zmodi <> 'D'
           INTO TABLE @DATA(active_agents).
 
-        LOOP AT active_agents INTO DATA(active_agent).          "#EC CI_NOORDER
+        LOOP AT active_agents INTO DATA(active_agent).  "#EC CI_NOORDER
           IF line_exists( lcl_buffer=>mt_delete_position[
                zclpr = active_agent-zclpr
                bukrs = active_agent-bukrs
@@ -5155,8 +5963,8 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
           ENDIF.
 
           has_agent = abap_true.
-          EXIT.                                           "#EC CI_NOORDER
-        ENDLOOP.                                          "#EC CI_NOORDER
+          EXIT.                                         "#EC CI_NOORDER
+        ENDLOOP.                                        "#EC CI_NOORDER
       ENDIF.
 
       IF has_agent = abap_false.
@@ -5227,6 +6035,29 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
           ELSEIF document_currency <> create_agent_check-zwaer.
             has_currency_conflict = abap_true.
           ENDIF.
+        ELSE.
+          APPEND VALUE #(
+           %pid  = document_to_check-pid
+           Zclpr = document_to_check-zclpr
+           Bukrs = document_to_check-bukrs
+           Vkorg = document_to_check-vkorg
+           Vtweg = document_to_check-vtweg
+           Vbeln = document_to_check-vbeln
+           Gjahr = document_to_check-gjahr
+         ) TO failed-document.
+
+          APPEND VALUE #(
+            %pid  = document_to_check-pid
+            Zclpr = document_to_check-zclpr
+            Bukrs = document_to_check-bukrs
+            Vkorg = document_to_check-vkorg
+            Vtweg = document_to_check-vtweg
+            Vbeln = document_to_check-vbeln
+            Gjahr = document_to_check-gjahr
+            %msg  = new_message_with_text(
+              severity = if_abap_behv_message=>severity-error
+              text     = 'Valuta documento obbligatoria' )
+          ) TO reported-document.
         ENDIF.
 
         IF create_agent_check-fkdat IS NOT INITIAL.
@@ -5251,6 +6082,29 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
           ELSEIF document_currency <> update_position_currency-waerk.
             has_currency_conflict = abap_true.
           ENDIF.
+        ELSE.
+          APPEND VALUE #(
+            %pid  = document_to_check-pid
+            Zclpr = document_to_check-zclpr
+            Bukrs = document_to_check-bukrs
+            Vkorg = document_to_check-vkorg
+            Vtweg = document_to_check-vtweg
+            Vbeln = document_to_check-vbeln
+            Gjahr = document_to_check-gjahr
+          ) TO failed-document.
+
+          APPEND VALUE #(
+            %pid  = document_to_check-pid
+            Zclpr = document_to_check-zclpr
+            Bukrs = document_to_check-bukrs
+            Vkorg = document_to_check-vkorg
+            Vtweg = document_to_check-vtweg
+            Vbeln = document_to_check-vbeln
+            Gjahr = document_to_check-gjahr
+            %msg  = new_message_with_text(
+              severity = if_abap_behv_message=>severity-error
+              text     = 'Valuta documento obbligatoria' )
+          ) TO reported-document.
         ENDIF.
       ENDLOOP.
 
@@ -5611,10 +6465,127 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD derive_prdo_fields.
+    " Use the effective header date before deriving date-dependent fields.
+    DATA(previous_date) = cs_prdo-fkdat.
+    READ TABLE lcl_buffer=>mt_update_document INTO DATA(header_update)
+      WITH KEY zclpr = cs_prdo-zclpr
+               bukrs = cs_prdo-bukrs
+               vkorg = cs_prdo-vkorg
+               vtweg = cs_prdo-vtweg
+               vbeln = cs_prdo-vbeln
+               gjahr = cs_prdo-gjahr.
+    IF sy-subrc = 0.
+      cs_prdo-fkdat = header_update-fkdat.
+    ENDIF.
+
+    CLEAR cs_prdo-ztpag.
+    SELECT ztpag
+      FROM /eacm/zpraa
+      WHERE zcdaz = @cs_prdo-zcdaz
+        AND erdat <= @cs_prdo-fkdat
+        AND zstre <> 'A'
+      ORDER BY erdat DESCENDING
+      INTO @cs_prdo-ztpag
+      UP TO 1 ROWS.
+    ENDSELECT.
+
+    SELECT SINGLE zflag, zcapr, zcaan, vbtyp, zcspv
+      FROM /eacm/zpr08
+      WHERE bukrs = @cs_prdo-bukrs
+        AND zclpr = @cs_prdo-zclpr
+      INTO @DATA(classification).
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    " PR1 FILL_ZCSPV: preserve a reason already stored on an existing row.
+    IF cs_prdo-zcspv IS INITIAL.
+      cs_prdo-zcspv = classification-zcspv.
+    ENDIF.
+
+    " SAP identifies SD classes through ZFLAG. Manual defaults do not apply.
+    IF classification-zflag = abap_true
+      OR ( classification-zcapr <> abap_true AND classification-zcaan <> abap_true ).
+      RETURN.
+    ENDIF.
+
+    " PR1 SALVA_I_PREMI: type from a blank-status contract, not from draft.
+    " Existing versions retain the type already stored, as in SAP PR2.
+    IF classification-zcapr = abap_true AND cs_prdo-ztprv IS INITIAL.
+      SELECT ztprv FROM /eacm/prcn
+        WHERE zcdaz = @cs_prdo-zcdaz AND bukrs = @cs_prdo-bukrs AND zstre = @space
+        ORDER BY zcdco
+        INTO @cs_prdo-ztprv
+        UP TO 1 ROWS.
+      ENDSELECT.
+    ENDIF.
+
+    " PR1 GET_PRCTR: specific agent, generic agent, then generic class.
+    IF cs_prdo-kostl IS INITIAL OR cs_prdo-prctr IS INITIAL.
+      SELECT SINGLE Kokrs FROM /eacm/r_t001
+        WHERE Bukrs = @cs_prdo-bukrs
+        INTO @DATA(controlling_area).
+      IF sy-subrc = 0 AND controlling_area IS NOT INITIAL.
+        SELECT SINGLE kostl, prctr FROM /eacm/zpr13
+          WHERE kokrs = @controlling_area AND vkorg = @cs_prdo-vkorg
+            AND zclpr = @cs_prdo-zclpr AND zcdaz = @cs_prdo-zcdaz
+          INTO @DATA(cost_assignment).
+        IF sy-subrc <> 0.
+          SELECT SINGLE kostl, prctr FROM /eacm/zpr13
+            WHERE kokrs = @controlling_area AND vkorg = @cs_prdo-vkorg
+              AND zclpr = @cs_prdo-zclpr AND zcdaz = @space
+            INTO @cost_assignment.
+          IF sy-subrc <> 0.
+            SELECT SINGLE kostl, prctr FROM /eacm/zpr13
+              WHERE kokrs = @controlling_area AND vkorg = @cs_prdo-vkorg
+                AND zclpr = @space AND zcdaz = @space
+              INTO @cost_assignment.
+          ENDIF.
+        ENDIF.
+        IF sy-subrc = 0.
+          IF cs_prdo-kostl IS INITIAL.
+            cs_prdo-kostl = cost_assignment-kostl.
+          ENDIF.
+          IF cs_prdo-prctr IS INITIAL.
+            cs_prdo-prctr = cost_assignment-prctr.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+
+    IF cs_prdo-waerk IS NOT INITIAL AND cs_prdo-waerk = cs_prdo-z_zwaer.
+      cs_prdo-kurrf = 1.
+    ENDIF.
+
+    IF cs_prdo-vbtyp IS INITIAL.
+      cs_prdo-vbtyp = classification-vbtyp.
+    ENDIF.
+    " Called after ADJUST_NUMBERS: VBELN is the final document number.
+    IF cs_prdo-belnr IS INITIAL.
+      cs_prdo-belnr = cs_prdo-vbeln.
+    ENDIF.
+    IF cs_prdo-bldat IS INITIAL OR previous_date <> cs_prdo-fkdat.
+      cs_prdo-bldat = cs_prdo-fkdat.
+    ENDIF.
+    IF cs_prdo-zvgdt IS INITIAL OR previous_date <> cs_prdo-fkdat.
+      cs_prdo-zvgdt = cs_prdo-fkdat.
+    ENDIF.
+
+    " PR1 SALVA_GLI_ANTICIPI; retain the SAP precedence of ZCAPR over ZCAAN.
+    IF classification-zcapr <> abap_true AND classification-zcaan = abap_true.
+      IF cs_prdo-zdtca IS INITIAL OR previous_date <> cs_prdo-fkdat.
+        cs_prdo-zdtca = cs_prdo-fkdat(6).
+      ENDIF.
+      IF cs_prdo-ztpan IS INITIAL.
+        cs_prdo-ztpan = 'C'.
+      ENDIF.
+    ENDIF.
+  ENDMETHOD.
+
   METHOD save.
     GET TIME STAMP FIELD DATA(now).
-    DATA system_time TYPE syuzeit.
-*    GET TIME FIELD system_time.
+    DATA(system_time) = cl_abap_context_info=>get_system_time( ).
     DATA(system_date) = cl_abap_context_info=>get_system_date( ).
     DATA(user_name) = cl_abap_context_info=>get_user_technical_name( ).
 
@@ -5715,28 +6686,51 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
         create_agent-zorcr = system_time.
       ENDIF.
 
+      derive_prdo_fields( CHANGING cs_prdo = create_agent ).
+
       MODIFY /eacm/prdo FROM @create_agent.
     ENDLOOP.
 
     LOOP AT lcl_buffer=>mt_update_position INTO DATA(update_position).
-      UPDATE /eacm/prdo SET
-        matnr = @update_position-matnr,
-        maktx = @update_position-maktx,
-        waerk = @update_position-waerk,
-        zwaer = @update_position-waerk,
-        menge = @update_position-menge,
-        changed_by = @user_name,
-        changed_at = @now,
-        local_last_changed_at = @now
-      WHERE zclpr = @update_position-zclpr
-        AND bukrs = @update_position-bukrs
-        AND vkorg = @update_position-vkorg
-        AND vtweg = @update_position-vtweg
-        AND vbeln = @update_position-vbeln
-        AND gjahr = @update_position-gjahr
-        AND posnr = @update_position-posnr
-        AND zstre <> 'D'
-        AND zmodi <> 'D'.
+      DATA(manual_position_update) = lcl_manual_rules=>is_manual( update_position ).
+      IF manual_position_update = abap_true.
+        UPDATE /eacm/prdo SET
+          matnr = @update_position-matnr,
+          maktx = @update_position-maktx,
+          waerk = @update_position-waerk,
+          menge = @update_position-menge,
+          changed_by = @user_name,
+          changed_at = @now,
+          local_last_changed_at = @now
+        WHERE zclpr = @update_position-zclpr
+          AND bukrs = @update_position-bukrs
+          AND vkorg = @update_position-vkorg
+          AND vtweg = @update_position-vtweg
+          AND vbeln = @update_position-vbeln
+          AND gjahr = @update_position-gjahr
+          AND posnr = @update_position-posnr
+          AND zstre <> 'D'
+          AND zmodi <> 'D'.
+      ELSE.
+        UPDATE /eacm/prdo SET
+          matnr = @update_position-matnr,
+          maktx = @update_position-maktx,
+          waerk = @update_position-waerk,
+          zwaer = @update_position-waerk,
+          menge = @update_position-menge,
+          changed_by = @user_name,
+          changed_at = @now,
+          local_last_changed_at = @now
+        WHERE zclpr = @update_position-zclpr
+          AND bukrs = @update_position-bukrs
+          AND vkorg = @update_position-vkorg
+          AND vtweg = @update_position-vtweg
+          AND vbeln = @update_position-vbeln
+          AND gjahr = @update_position-gjahr
+          AND posnr = @update_position-posnr
+          AND zstre <> 'D'
+          AND zmodi <> 'D'.
+      ENDIF.
     ENDLOOP.
 
     LOOP AT lcl_buffer=>mt_update_agent INTO DATA(update_agent).
@@ -5791,6 +6785,7 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
         INTO @DATA(max_update_zidag).
 
       DATA(new_update_agent) = current_agent.
+      new_update_agent-z_zwaer = update_agent-z_zwaer.
       DATA(new_zidag_number) = CONV i( max_update_zidag ) + 1.
       new_update_agent-zidag = CONV /eacm/zidag( |{ new_zidag_number WIDTH = 4 PAD = '0' ALIGN = RIGHT }| ).
       new_update_agent-ziman = update_agent-ziman.
@@ -5826,28 +6821,144 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
       new_update_agent-changed_at = now.
       new_update_agent-local_last_changed_at = now.
 
+      derive_prdo_fields( CHANGING cs_prdo = new_update_agent ).
+
       INSERT /eacm/prdo FROM @new_update_agent.
+
+      IF lcl_manual_rules=>is_manual( new_update_agent ) = abap_true.
+        SELECT SINGLE zcapr, zcaan FROM /eacm/zpr08
+          WHERE bukrs = @new_update_agent-bukrs AND zclpr = @new_update_agent-zclpr
+          INTO @DATA(version_classification).
+        IF sy-subrc = 0 AND (
+             ( version_classification-zcapr = abap_true AND current_agent-zimmg IS NOT INITIAL )
+          OR ( version_classification-zcapr <> abap_true
+               AND version_classification-zcaan = abap_true AND current_agent-zimar IS NOT INITIAL ) ).
+          SELECT * FROM /eacm/zprdp
+            WHERE vkorg = @current_agent-vkorg AND vtweg = @current_agent-vtweg
+              AND bukrs = @current_agent-bukrs AND zclpr = @current_agent-zclpr
+              AND vbeln = @current_agent-vbeln AND posnr = @current_agent-posnr
+              AND zcdaz = @current_agent-zcdaz AND zidag = @current_agent-zidag
+              AND zstre <> 'D'
+            INTO TABLE @DATA(version_details).
+          LOOP AT version_details ASSIGNING FIELD-SYMBOL(<version_detail>).
+            " Keep the original status/amounts on the new version.
+            <version_detail>-zidag = new_update_agent-zidag.
+            <version_detail>-zcamd = user_name.
+            <version_detail>-zdtmd = system_date.
+            <version_detail>-zormd = system_time.
+            <version_detail>-changed_by = user_name.
+            <version_detail>-changed_at = now.
+            <version_detail>-local_last_changed_at = now.
+          ENDLOOP.
+          IF version_details IS NOT INITIAL.
+            " Duplicate keys raise an SQL error: do not silently lose details.
+            INSERT /eacm/zprdp FROM TABLE @version_details.
+            UPDATE /eacm/zprdp SET
+              zstre = 'D', zcamd = @user_name, zdtmd = @system_date,
+              zormd = @system_time, changed_by = @user_name,
+              changed_at = @now, local_last_changed_at = @now
+            WHERE vkorg = @current_agent-vkorg AND vtweg = @current_agent-vtweg
+              AND bukrs = @current_agent-bukrs AND zclpr = @current_agent-zclpr
+              AND vbeln = @current_agent-vbeln AND posnr = @current_agent-posnr
+              AND zcdaz = @current_agent-zcdaz AND zidag = @current_agent-zidag
+              AND zstre <> 'D'.
+          ENDIF.
+        ENDIF.
+      ENDIF.
     ENDLOOP.
 
+    DATA header_rows TYPE STANDARD TABLE OF /eacm/prdo WITH EMPTY KEY.
+    CLEAR header_rows.
+
     LOOP AT lcl_buffer=>mt_update_document INTO DATA(update_document).
-      UPDATE /eacm/prdo SET
-        fkdat = @update_document-fkdat,
-        waerk = @update_document-waerk,
-        changed_by = @user_name,
-        changed_at = @now,
-        local_last_changed_at = @now
-      WHERE zclpr = @update_document-zclpr
-        AND bukrs = @update_document-bukrs
-        AND vkorg = @update_document-vkorg
-        AND vtweg = @update_document-vtweg
-        AND vbeln = @update_document-vbeln
-        AND gjahr = @update_document-gjahr
-        AND posnr <> '000000'
-        AND zstre <> 'D'
-        AND zmodi <> 'D'.
+      DATA(manual_header_update) = lcl_manual_rules=>is_manual( update_document ).
+      " Also refresh derived fields when only the header date is edited.
+      SELECT FROM /eacm/prdo
+  FIELDS belnr, bldat, bukrs, fkdat, gjahr, posnr, vbeln, vbtyp,
+         vkorg, vtweg, zcdaz, zclpr, zcspv, zdtca, zidag,
+         ztpan, ztpag, zvgdt, kostl, prctr, ztprv
+  WHERE zclpr = @update_document-zclpr
+    AND bukrs = @update_document-bukrs
+    AND vkorg = @update_document-vkorg
+    AND vtweg = @update_document-vtweg
+    AND vbeln = @update_document-vbeln
+    AND gjahr = @update_document-gjahr
+    AND posnr <> '000000'
+    AND zstre <> 'D'
+    AND zmodi <> 'D'
+  INTO CORRESPONDING FIELDS OF TABLE @header_rows.
+      LOOP AT header_rows INTO DATA(header_row).
+        derive_prdo_fields( CHANGING cs_prdo = header_row ).
+        UPDATE /eacm/prdo SET
+          belnr = @header_row-belnr,
+          bldat = @header_row-bldat,
+          zvgdt = @header_row-zvgdt,
+          vbtyp = @header_row-vbtyp,
+          zcspv = @header_row-zcspv,
+          zdtca = @header_row-zdtca,
+          ztpan = @header_row-ztpan,
+          ztpag = @header_row-ztpag,
+          kostl = @header_row-kostl,
+          prctr = @header_row-prctr,
+          ztprv = @header_row-ztprv
+        WHERE zclpr = @header_row-zclpr
+          AND bukrs = @header_row-bukrs
+          AND vkorg = @header_row-vkorg
+          AND vtweg = @header_row-vtweg
+          AND vbeln = @header_row-vbeln
+          AND gjahr = @header_row-gjahr
+          AND posnr = @header_row-posnr
+          AND zcdaz = @header_row-zcdaz
+          AND zidag = @header_row-zidag.
+      ENDLOOP.
+      IF manual_header_update = abap_true.
+        UPDATE /eacm/prdo SET
+          fkdat = @update_document-fkdat,
+          changed_by = @user_name,
+          changed_at = @now,
+          local_last_changed_at = @now
+        WHERE zclpr = @update_document-zclpr
+          AND bukrs = @update_document-bukrs
+          AND vkorg = @update_document-vkorg
+          AND vtweg = @update_document-vtweg
+          AND vbeln = @update_document-vbeln
+          AND gjahr = @update_document-gjahr
+          AND posnr <> '000000'
+          AND zstre <> 'D'
+          AND zmodi <> 'D'.
+      ELSE.
+        UPDATE /eacm/prdo SET
+          fkdat = @update_document-fkdat,
+          waerk = @update_document-waerk,
+          changed_by = @user_name,
+          changed_at = @now,
+          local_last_changed_at = @now
+        WHERE zclpr = @update_document-zclpr
+          AND bukrs = @update_document-bukrs
+          AND vkorg = @update_document-vkorg
+          AND vtweg = @update_document-vtweg
+          AND vbeln = @update_document-vbeln
+          AND gjahr = @update_document-gjahr
+          AND posnr <> '000000'
+          AND zstre <> 'D'
+          AND zmodi <> 'D'.
+      ENDIF.
     ENDLOOP.
 
     LOOP AT lcl_buffer=>mt_delete_agent INTO DATA(delete_agent).
+      IF lcl_manual_rules=>is_manual( delete_agent ) = abap_true.
+        UPDATE /eacm/zprdp SET
+          zstre = 'D', zcamd = @user_name, zdtmd = @system_date,
+          zormd = @system_time, changed_by = @user_name,
+          changed_at = @now, local_last_changed_at = @now
+        WHERE vkorg = @delete_agent-vkorg AND vtweg = @delete_agent-vtweg
+          AND bukrs = @delete_agent-bukrs AND zclpr = @delete_agent-zclpr
+          AND vbeln = @delete_agent-vbeln
+          AND posnr = @delete_agent-posnr
+          AND zcdaz = @delete_agent-zcdaz AND zidag = @delete_agent-zidag
+          AND zdtsf = '00000000'
+          AND zstre <> 'D'.
+      ENDIF.
       UPDATE /eacm/prdo SET
         zmodi = 'D',
         zstre = 'D',
@@ -5871,6 +6982,17 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
     ENDLOOP.
 
     LOOP AT lcl_buffer=>mt_delete_position INTO DATA(delete_position).
+      IF lcl_manual_rules=>is_manual( delete_position ) = abap_true.
+        UPDATE /eacm/zprdp SET
+          zstre = 'D', zcamd = @user_name, zdtmd = @system_date,
+          zormd = @system_time, changed_by = @user_name,
+          changed_at = @now, local_last_changed_at = @now
+        WHERE vkorg = @delete_position-vkorg AND vtweg = @delete_position-vtweg
+          AND bukrs = @delete_position-bukrs AND zclpr = @delete_position-zclpr
+          AND vbeln = @delete_position-vbeln
+          AND posnr = @delete_position-posnr
+          AND zstre <> 'D'.
+      ENDIF.
       UPDATE /eacm/prdo SET
         zmodi = 'D',
         zstre = 'D',
@@ -5892,6 +7014,16 @@ CLASS lsc_I_PRDO_DOC IMPLEMENTATION.
     ENDLOOP.
 
     LOOP AT lcl_buffer=>mt_delete_document INTO DATA(delete_document).
+      IF lcl_manual_rules=>is_manual( delete_document ) = abap_true.
+        UPDATE /eacm/zprdp SET
+          zstre = 'D', zcamd = @user_name, zdtmd = @system_date,
+          zormd = @system_time, changed_by = @user_name,
+          changed_at = @now, local_last_changed_at = @now
+        WHERE vkorg = @delete_document-vkorg AND vtweg = @delete_document-vtweg
+          AND bukrs = @delete_document-bukrs AND zclpr = @delete_document-zclpr
+          AND vbeln = @delete_document-vbeln
+          AND zstre <> 'D'.
+      ENDIF.
       UPDATE /eacm/prdo SET
         zmodi = 'D',
         zstre = 'D',

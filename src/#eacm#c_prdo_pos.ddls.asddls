@@ -18,6 +18,11 @@ define view entity /EACM/C_PRDO_POS
   Quantity,
   LocalLastChangedAt,
 
+  @ObjectModel.virtualElementCalculatedBy: 'ABAP:/EACM/CL_PRDO_AGT_HIDE'
+  virtual HideAgentsAnticipi : abap_boolean,
+
+  @ObjectModel.virtualElementCalculatedBy: 'ABAP:/EACM/CL_PRDO_AGT_HIDE'
+  virtual HideAgentsProvvigioni : abap_boolean,
 
   _Document : redirected to parent /EACM/C_PRDO_DOC,
   _Agents   : redirected to composition child /EACM/C_PRDO_AGT

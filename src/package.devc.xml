@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DEVC>
-    <CTEXT>eACM Commission Documents &amp; Details</CTEXT>
+    <CTEXT>eACM /EACM/APP_COMMISSION</CTEXT>
     <LANGUAGE>E</LANGUAGE>
     <MASTERLANG>E</MASTERLANG>
    </DEVC>

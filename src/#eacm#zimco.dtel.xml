@@ -11,10 +11,10 @@
     <SCRLEN2>19</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
     <DDTEXT>Taxable orders</DDTEXT>
-    <REPTEXT>Taxable order</REPTEXT>
-    <SCRTEXT_S>Tax.ord.</SCRTEXT_S>
-    <SCRTEXT_M>Tax.order</SCRTEXT_M>
-    <SCRTEXT_L>Taxable order</SCRTEXT_L>
+    <REPTEXT>Commission amount</REPTEXT>
+    <SCRTEXT_S>Commission</SCRTEXT_S>
+    <SCRTEXT_M>Commission amount</SCRTEXT_M>
+    <SCRTEXT_L>Commission amount</SCRTEXT_L>
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
     <ABAP_LANGUAGE_VERSION>5</ABAP_LANGUAGE_VERSION>

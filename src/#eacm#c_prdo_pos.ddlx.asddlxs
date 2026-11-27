@@ -11,7 +11,10 @@ annotate view /EACM/C_PRDO_POS with
     { id: 'Position', purpose: #STANDARD, type: #COLLECTION, label: 'Dettaglio posizione', position: 10 },
     { id: 'PositionKeys', parentId: 'Position', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Keys', label: 'Identificativi', position: 10 },
     { id: 'PositionMaterial', parentId: 'Position', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'Material', label: 'Materiale e valori', position: 20 },
-    { id: 'Agents', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Agenti', position: 20, targetElement: '_Agents' }
+    { id: 'AgentsAnticipi', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Agenti', position: 20, targetElement: '_Agents', targetQualifier: 'Anticipi',
+      hidden: #(HideAgentsAnticipi) },
+    { id: 'AgentsProvvigioni', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Agenti', position: 30, targetElement: '_Agents', targetQualifier: 'Provvigioni',
+      hidden: #(HideAgentsProvvigioni) }
   ]
 
   @EndUserText.label: 'Cod.class.comm.'
@@ -52,6 +55,10 @@ annotate view /EACM/C_PRDO_POS with
     { qualifier: 'Material', position: 30 },
     { qualifier: 'ItemSummary', position: 50 }
   ]
+  @Consumption.valueHelpDefinition: [{
+      entity: {name: 'I_CurrencyStdVH', element: 'Currency' },
+      useForValidation: true
+  }]
   Waerk;
 
   @EndUserText.label: 'Quantita'
